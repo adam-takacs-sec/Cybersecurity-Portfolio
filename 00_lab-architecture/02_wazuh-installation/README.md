@@ -1,0 +1,1 @@
+# Wazuh Installation (Docker, ARM)
