@@ -374,5 +374,7 @@ Event
 # 🎯 **End of Section 1**
 This section gives complete SOC-ready detection coverage for core Windows Security and System logs.
 
-Next:  
-➡️ **Section 2 — Sysmon Logs**  
+---
+
+### ➡️ Next: [Section 2 — Sysmon Logs](./02_sysmon_logs.md)
+
