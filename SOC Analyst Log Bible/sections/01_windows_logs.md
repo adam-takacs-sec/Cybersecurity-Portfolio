@@ -9,7 +9,7 @@ MITRE ATT&CK mapping, real log examples, and detection logic for SIEM.**
 ---
 
 # 🧭 **TABLE OF CONTENTS**
-- [4624 — Successful Logon](#4624--successful-logon)
+- [4624 - Successful Logon](#4624---successful-logon)
 - [4625 — Failed Logon](#4625--failed-logon)
 - [4672 — Special Privileges Assigned](#4672--special-privileges-assigned)
 - [4688 — New Process Created](#4688--new-process-created)
@@ -23,7 +23,7 @@ MITRE ATT&CK mapping, real log examples, and detection logic for SIEM.**
 ---
 
 # ---
-# ## **4624 — Successful Logon**
+# ## 4624 - Successful Logon
 ### **Meaning**
 A user successfully authenticated.
 
