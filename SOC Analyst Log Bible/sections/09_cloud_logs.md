@@ -22,20 +22,20 @@ This section covers:
 ---
 
 # 🧭 **TABLE OF CONTENTS**
-- [Cloud Logging Overview](#cloud-logging-overview)
-- [Azure AD Logs](#azure-ad-logs)
-  - [Sign-in Logs](#azure-ad-sign-in-logs)
-  - [Audit Logs](#azure-ad-audit-logs)
-  - [Risky Sign-ins](#azure-ad-risky-sign-ins)
-  - [Azure SOC Red Flags](#azure-soc-red-flags)
-- [AWS CloudTrail](#aws-cloudtrail)
-  - [Important Event Types](#important-event-types)
-  - [Attack Patterns](#aws-attack-patterns)
-  - [AWS SOC Red Flags](#aws-soc-red-flags)
-- [GCP Audit Logs](#gcp-audit-logs)
-  - [Key Event Categories](#key-event-categories)
-  - [GCP SOC Red Flags](#gcp-soc-red-flags)
-- [SIEM Queries](#siem-queries)
+- [Cloud Logging Overview](#-cloud-logging-overview)
+- [Azure AD Logs](#-azure-ad-logs)
+  - [Sign-in Logs](#-azure-ad-sign-in-logs)
+  - [Audit Logs](#-azure-ad-audit-logs)
+  - [Risky Sign-ins](#-azure-ad-risky-sign-ins)
+  - [Azure SOC Red Flags](#-azure-soc-red-flags)
+- [AWS CloudTrail](#-aws-cloudtrail)
+  - [Important Event Types](#-important-event-types)
+  - [Attack Patterns](#-aws-attack-patterns)
+  - [AWS SOC Red Flags](#-aws-soc-red-flags)
+- [GCP Audit Logs](#-gcp-audit-logs)
+  - [Key Event Categories](#-key-event-categories)
+  - [GCP SOC Red Flags](#-gcp-soc-red-flags)
+- [SIEM Queries](#-siem-queries)
 
 ---
 
@@ -377,6 +377,7 @@ GCPAudit
 # 🎯 **End of Section 9**
 This section provides full coverage of Azure, AWS, and GCP logs to detect identity-based attacks, privilege escalation, data exfiltration, and cloud account compromise.
 
-Next:  
-➡️ **Section 10 — EDR Telemetry**
+---
+
+### ➡️ Next: [Section 10 — EDR Telemetry](./10_edr_telemetry.md)
 
