@@ -400,6 +400,6 @@ This section provides everything needed for Sysmon-based SOC detection, DFIR inv
 
 ---
 
-### Next: **Section 3 — Powershell Logs**  
-➡️ [Open](./03_powershell_logs.md)
+### ➡️ Next: [Section 3 — Powershell Logs](./03_powershell_logs.md)
+
 
