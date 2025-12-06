@@ -1,4 +1,4 @@
-# 🔐 Ádám – Practical Cybersecurity Portfolio
+# 🔐 Adam – Practical Cybersecurity Portfolio
 
 Hands-on cybersecurity projects, SOC analysis work, log investigation, and attack simulations — built across a hybrid lab environment combining local ARM virtualization and cloud infrastructure.
 
