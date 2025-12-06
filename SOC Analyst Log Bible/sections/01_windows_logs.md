@@ -376,5 +376,5 @@ This section gives complete SOC-ready detection coverage for core Windows Securi
 
 ---
 
-### ➡️ Next: [Section 2 — Sysmon Logs](./02_sysmon_logs.md)
+### ➡️ Next: [Section 2 — Sysmon](./02_sysmon.md)
 
