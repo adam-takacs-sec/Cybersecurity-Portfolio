@@ -22,18 +22,18 @@ This section documents the most critical EDR telemetry types and how SOC analyst
 ---
 
 # 🧭 **TABLE OF CONTENTS**
-- [Overview of EDR Telemetry](#overview-of-edr-telemetry)
-- [Process Trees](#process-trees)
-  - [Suspicious Parent-Child Chains](#suspicious-parent-child-chains)
-- [Command Line Indicators](#command-line-indicators)
-- [Network Telemetry](#network-telemetry)
-- [Memory & Injection Indicators](#memory--injection-indicators)
-- [Credential Access Indicators](#credential-access-indicators)
-- [Lateral Movement Indicators](#lateral-movement-indicators)
-- [File & Registry Telemetry](#file--registry-telemetry)
-- [Persistence Indicators](#persistence-indicators)
-- [Behavioral Detection Patterns](#behavioral-detection-patterns)
-- [EDR SOC Red Flags](#edr-soc-red-flags)
+- [Overview of EDR Telemetry](#-overview-of-edr-telemetry)
+- [Process Trees](#-process-trees)
+  - [Suspicious Parent-Child Chains](#-suspicious-parent-child-chains)
+- [Command Line Indicators](#-command-line-indicators)
+- [Network Telemetry](#-network-telemetry)
+- [Memory & Injection Indicators](#-memory--injection-indicators)
+- [Credential Access Indicators](#-credential-access-indicators)
+- [Lateral Movement Indicators](#-lateral-movement-indicators)
+- [File & Registry Telemetry](#-file--registry-telemetry)
+- [Persistence Indicators](#-persistence-indicators)
+- [Behavioral Detection Patterns](#-behavioral-detection-patterns)
+- [EDR SOC Red Flags](#-edr-soc-red-flags)
 
 ---
 
@@ -388,6 +388,4 @@ You have:
 - Web Server Logs  
 - Cloud Logs  
 - EDR Telemetry  
-
-Complete. Professional. Portfolio-ready.
 
