@@ -86,7 +86,7 @@ SecurityEvent
 ---
 
 # ---
-# ## **4625 — Failed Logon**
+# ## 4625 — Failed Logon
 ### **Meaning**
 Authentication attempt failed.
 
@@ -132,7 +132,7 @@ SecurityEvent
 ---
 
 # ---
-# ## **4672 — Special Privileges Assigned**
+# ## 4672 — Special Privileges Assigned
 ### **Meaning**
 A user logged on and received **admin privileges** (SeDebug, SeImpersonate, SeTcbPrivilege, etc.)
 
@@ -173,7 +173,7 @@ SecurityEvent
 ---
 
 # ---
-# ## **4688 — New Process Created**
+# ## 4688 — New Process Created
 ### **Meaning**
 A process was created with command-line arguments.
 
@@ -236,7 +236,7 @@ SecurityEvent
 ---
 
 # ---
-# ## **4648 — Logon with Explicit Credentials**
+# ## 4648 — Logon with Explicit Credentials
 ### **Meaning**
 A process attempted to authenticate using **explicit credentials** (e.g. runas, remote execution tools).
 
@@ -265,7 +265,7 @@ Flag:
 ---
 
 # ---
-# ## **4634 — Logoff**
+# ## 4634 — Logoff
 ### **Meaning**
 A session ended.
 
@@ -278,7 +278,7 @@ Not suspicious alone — but important for:
 ---
 
 # ---
-# ## **4768 — Kerberos Authentication (TGT Request)**
+# ## 4768 — Kerberos Authentication (TGT Request)
 ### **Meaning**
 User requested a **Kerberos Ticket Granting Ticket (TGT).**
 
@@ -299,7 +299,7 @@ Detect:
 ---
 
 # ---
-# ## **4769 — Kerberos Service Ticket (TGS) Request**
+# ## 4769 — Kerberos Service Ticket (TGS) Request
 ### **Meaning**
 User requested access to a specific Kerberos service.
 
@@ -317,7 +317,7 @@ Kerberoasting relies on:
 ---
 
 # ---
-# ## **4776 — NTLM Authentication**
+# ## 4776 — NTLM Authentication
 ### **Meaning**
 Windows attempted to validate credentials using NTLM instead of Kerberos.
 
@@ -334,7 +334,7 @@ NTLM is less secure and used for:
 ---
 
 # ---
-# ## **7045 — A Service Was Installed (System Log)**
+# ## 7045 — A Service Was Installed (System Log)
 ### **Meaning**
 A new Windows service was installed.
 
