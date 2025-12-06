@@ -12,25 +12,25 @@ This section covers:
 ---
 
 # 🧭 **TABLE OF CONTENTS**
-- [Overview of Network Logging](#overview-of-network-logging)
-- [Firewall Logs](#firewall-logs)
-  - [Palo Alto](#palo-alto)
-  - [Fortinet](#fortinet)
-  - [Cisco ASA](#cisco-asa)
-  - [Firewall SOC Red Flags](#firewall-soc-red-flags)
-- [VPN Logs](#vpn-logs)
-  - [AnyConnect](#anyconnect)
-  - [GlobalProtect](#globalprotect)
-  - [VPN SOC Red Flags](#vpn-soc-red-flags)
-- [DNS Logs](#dns-logs)
-  - [DNS Server Logs](#dns-server-logs)
-  - [Endpoint DNS Logs](#endpoint-dns-logs)
-  - [DNS SOC Red Flags](#dns-soc-red-flags)
-- [Proxy / Web Gateway Logs](#proxy--web-gateway-logs)
-  - [Squid](#squid)
-  - [BlueCoat](#bluecoat)
-  - [Proxy SOC Red Flags](#proxy-soc-red-flags)
-- [SIEM Detection Queries](#siem-detection-queries)
+- [Overview of Network Logging](-#overview-of-network-logging)
+- [Firewall Logs](#-firewall-logs)
+  - [Palo Alto](#-palo-alto)
+  - [Fortinet](#-fortinet)
+  - [Cisco ASA](#-cisco-asa)
+  - [Firewall SOC Red Flags](#-firewall-soc-red-flags)
+- [VPN Logs](#-vpn-logs)
+  - [AnyConnect](#-anyconnect)
+  - [GlobalProtect](#-globalprotect)
+  - [VPN SOC Red Flags](#-vpn-soc-red-flags)
+- [DNS Logs](#-dns-logs)
+  - [DNS Server Logs](#-dns-server-logs)
+  - [Endpoint DNS Logs](#-endpoint-dns-logs)
+  - [DNS SOC Red Flags](#-dns-soc-red-flags)
+- [Proxy / Web Gateway Logs](#-proxy--web-gateway-logs)
+  - [Squid](#-squid)
+  - [BlueCoat](#-bluecoat)
+  - [Proxy SOC Red Flags](#-proxy-soc-red-flags)
+- [SIEM Detection Queries](#-siem-detection-queries)
 
 ---
 
@@ -442,5 +442,6 @@ Firewall
 # 🎯 **End of Section 7**
 This section provides full SOC visibility into firewalls, VPN activity, DNS analysis, and proxy logs — essential for detecting C2, exfiltration, and lateral movement.
 
-Next:  
-➡️ **Section 8 — Web Server Logs**
+---
+
+### ➡️ Next: [Section 8 — Webserver Logs](./08_webserver_logs.md)
