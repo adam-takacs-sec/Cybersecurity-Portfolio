@@ -398,5 +398,8 @@ Detects:
 # 🎯 **End of Section 2**
 This section provides everything needed for Sysmon-based SOC detection, DFIR investigations, and detection engineering.
 
-Next:  
-➡️ **Section 3 — PowerShell Logs**
+---
+
+### Next: **Section 3 — Powershell Logs**  
+➡️ [Open](./03_powershell_logs.md)
+
