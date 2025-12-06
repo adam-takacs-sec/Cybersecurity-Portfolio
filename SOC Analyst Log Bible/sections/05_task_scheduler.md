@@ -9,13 +9,13 @@ This section documents all key Task Scheduler event IDs relevant to SOC analysts
 ---
 
 # 🧭 **TABLE OF CONTENTS**
-- [Overview of Task Scheduler Logging](#overview-of-task-scheduler-logging)
-- [Event ID 106 — Task Registered](#event-id-106--task-registered)
-- [Event ID 140 — Task Updated](#event-id-140--task-updated)
-- [Event ID 200 — Task Executed](#event-id-200--task-executed)
-- [Common Attacker Techniques](#common-attacker-techniques)
-- [Persistence Red Flags](#persistence-red-flags)
-- [SIEM Detection Queries](#siem-detection-queries)
+- [Overview of Task Scheduler Logging](#-overview-of-task-scheduler-logging)
+- [Event ID 106 — Task Registered](#-event-id-106--task-registered)
+- [Event ID 140 — Task Updated](#-event-id-140--task-updated)
+- [Event ID 200 — Task Executed](#-event-id-200--task-executed)
+- [Common Attacker Techniques](#-common-attacker-techniques)
+- [Persistence Red Flags](#-persistence-red-flags)
+- [SIEM Detection Queries](#-siem-detection-queries)
 
 ---
 
@@ -257,5 +257,6 @@ TaskScheduler
 # 🎯 **End of Section 5**
 This section provides all necessary detection logic for identifying persistence mechanisms, malicious scheduled tasks, and post-exploitation automation via Windows Task Scheduler.
 
-Next:  
-➡️ **Section 6 — Linux Logs**
+---
+
+### ➡️ Next: [Section 6 — Linux Logs](./06_linux_logs.md)
