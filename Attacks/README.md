@@ -16,8 +16,10 @@ This section is part of the broader **Cybersecurity Portfolio**, where all attac
 
 ## 📂 Current Attack Documentation
 
-### 🔐 **Password Attacks**
-➡️ [`Password Attacks`](./Password%20Attacks.md)
+
+### 🔐 Password Attacks
+➡️ **[Password Attacks](./Password%20Attacks.md)**
+
 
 Covers:
 
