@@ -252,5 +252,7 @@ PowerShellEvent
 # 🎯 **End of Section 3**
 This section provides full detection coverage for malicious PowerShell activity across all major attack techniques.
 
-Next:  
-➡️ **Section 4 — Windows Defender Logs**
+---
+
+### ➡️ Next: [Section 4 — Windows Defender](./04_windows_defender.md)
+
