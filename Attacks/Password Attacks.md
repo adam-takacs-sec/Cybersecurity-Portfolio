@@ -3,7 +3,7 @@
 This document summarizes the most important **password attack methods** and the related **brute-force tools** (Hydra, Ncrack, CrackMapExec, Crowbar, Medusa, Crunch, CeWL, John the Ripper), specifically for **lab / pentest / SOC learning** purposes.
 
 > ⚠️ **Warning:** All examples are for use **only in your own lab environment**, against systems you own or are explicitly authorized to test.  
-> Running brute-force attacks against third-party systems is illegal.
+> Running password attacks against third-party systems is illegal.
 
 ---
 
@@ -65,7 +65,7 @@ This document summarizes the most important **password attack methods** and the 
 
 ---
 
-## 2. Brute-force Tools – Overview
+## 2. Password Attack Tools – Overview
 
 | Tool               | Description                                               | Typical Protocols                          | Attack Types                         |
 |--------------------|-----------------------------------------------------------|--------------------------------------------|--------------------------------------|
