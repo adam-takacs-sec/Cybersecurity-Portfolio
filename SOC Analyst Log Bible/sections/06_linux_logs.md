@@ -18,20 +18,20 @@ This section covers all major Linux logs used in SOC and DFIR investigations:
 ---
 
 # 🧭 **TABLE OF CONTENTS**
-- [Overview of Linux Logging](#overview-of-linux-logging)
-- [Authentication Logs — authlog](#authentication-logs--authlog)
-  - [SSH Login Success](#ssh-login-success)
-  - [SSH Failed Login](#ssh-failed-login)
-  - [Privilege Escalation (sudo)](#privilege-escalation-sudo)
-- [System Logs — syslog](#system-logs--syslog)
-- [auditd — Deep Forensics Logging](#auditd--deep-forensics-logging)
-  - [EXECVE — Command Execution](#execve--command-execution)
-  - [SYSCALL — System Calls](#syscall--system-calls)
-  - [PATH — File Access](#path--file-access)
-  - [USER_ACCT, USER_CMD](#user_acct-user_cmd)
-- [sshd logs](#sshd-logs)
-- [Persistence Indicators](#persistence-indicators)
-- [SIEM Detection Queries](#siem-detection-queries)
+- [Overview of Linux Logging](#-overview-of-linux-logging)
+- [Authentication Logs — authlog](#-authentication-logs--authlog)
+  - [SSH Login Success](#-ssh-login-success)
+  - [SSH Failed Login](#-ssh-failed-login)
+  - [Privilege Escalation (sudo)](#-privilege-escalation-sudo)
+- [System Logs — syslog](#-system-logs--syslog)
+- [auditd — Deep Forensics Logging](#-auditd--deep-forensics-logging)
+  - [EXECVE — Command Execution](#-execve--command-execution)
+  - [SYSCALL — System Calls](#-syscall--system-calls)
+  - [PATH — File Access](#-path--file-access)
+  - [USER_ACCT, USER_CMD](#-user_acct-user_cmd)
+- [sshd logs](#-sshd-logs)
+- [Persistence Indicators](#-persistence-indicators)
+- [SIEM Detection Queries](#-siem-detection-queries)
 
 ---
 
@@ -392,5 +392,6 @@ LinuxAudit
 # 🎯 **End of Section 6**
 This section provides essential SOC-level detection coverage for Linux authentication, system behavior, auditd telemetry, privilege escalation, and persistence techniques.
 
-Next:  
-➡️ **Section 7 — Network Logs**
+---
+
+### ➡️ Next: [Section 7 — Network Logs](./07_network_logs.md)
