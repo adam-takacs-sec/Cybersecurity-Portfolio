@@ -12,7 +12,7 @@ This section covers:
 ---
 
 # 🧭 **TABLE OF CONTENTS**
-- [Overview of Network Logging](-#overview-of-network-logging)
+- [Overview of Network Logging](#-overview-of-network-logging)
 - [Firewall Logs](#-firewall-logs)
   - [Palo Alto](#-palo-alto)
   - [Fortinet](#-fortinet)
