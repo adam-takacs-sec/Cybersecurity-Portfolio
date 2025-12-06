@@ -16,7 +16,7 @@ MITRE ATT&CK mapping, real log examples, and detection logic for SIEM.**
 - [4648 — Logon with Explicit Credentials](#-4648--logon-with-explicit-credentials)
 - [4634 — Logoff](#-4634--logoff)
 - [4768 — Kerberos Authentication (TGT Request)](#-4768--kerberos-authentication-tgt-request)
-- [4769 — Kerberos Service Ticket (TGS)](#-4769--kerberos-service-ticket-tgs)
+- [4769 — Kerberos Service Ticket (TGS)](#-4769--kerberos-service-ticket-tgs-request)
 - [4776 — NTLM Authentication](#-4776--ntlm-authentication)
 - [7045 — New Service Installed (System Log)](#-7045--a-service-was-installed-system-log)
 
