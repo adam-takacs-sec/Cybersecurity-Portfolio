@@ -28,7 +28,7 @@ This section covers all major Linux logs used in SOC and DFIR investigations:
   - [EXECVE — Command Execution](#-execve--command-execution)
   - [SYSCALL — System Calls](#-syscall--system-calls)
   - [PATH — File Access](#-path--file-access)
-  - [USER_ACCT, USER_CMD](#-user_acct-user_cmd)
+  - [USER_ACCT, USER_CMD](#-user_acct--user_cmd)
 - [sshd logs](#-sshd-logs)
 - [Persistence Indicators](#-persistence-indicators)
 - [SIEM Detection Queries](#-siem-detection-queries)
