@@ -9,14 +9,14 @@ This section covers the most important Windows Defender event IDs, how attackers
 ---
 
 # 🧭 **TABLE OF CONTENTS**
-- [Overview of Windows Defender Logging](#overview-of-windows-defender-logging)
-- [Event ID 1116 — Malware Detected](#event-id-1116--malware-detected)
-- [Event ID 1117 — Malware Action Taken](#event-id-1117--malware-action-taken)
-- [Event ID 5007 — Configuration Changed](#event-id-5007--configuration-changed)
-- [Event ID 5010 — Behavior Block](#event-id-5010--behavior-block)
-- [Common Evasion Techniques](#common-evasion-techniques)
-- [Key Defender Log Locations](#key-defender-log-locations)
-- [SIEM Detection Queries](#siem-detection-queries)
+- [Overview of Windows Defender Logging](#-overview-of-windows-defender-logging)
+- [Event ID 1116 — Malware Detected](#-event-id-1116--malware-detected)
+- [Event ID 1117 — Malware Action Taken](#-event-id-1117--malware-action-taken)
+- [Event ID 5007 — Configuration Changed](#-event-id-5007--configuration-changed)
+- [Event ID 5010 — Behavior Block](#-event-id-5010--behavior-block)
+- [Common Evasion Techniques](#-common-evasion-techniques)
+- [Key Defender Log Locations](#-key-defender-log-locations)
+- [SIEM Detection Queries](#-siem-detection-queries)
 
 ---
 
@@ -282,5 +282,7 @@ Defender
 # 🎯 **End of Section 4**
 This section enables SOC analysts to detect malware, tampering, evasion, and early-stage ransomware indicators through Defender logs.
 
-Next:  
-➡️ **Section 5 — Task Scheduler Logs**
+---
+
+### ➡️ Next: [Section 5 — Task Scheduler](./05_task_scheduler.md)
+
