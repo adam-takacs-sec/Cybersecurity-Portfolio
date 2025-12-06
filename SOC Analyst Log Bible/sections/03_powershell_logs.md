@@ -16,13 +16,13 @@ These logs are essential for detecting PowerShell-based malware and post-exploit
 ---
 
 # 🧭 **TABLE OF CONTENTS**
-- [Overview of PowerShell Logging](#overview-of-powershell-logging)
-- [Event ID 4104 — ScriptBlock Logging](#event-id-4104--scriptblock-logging)
-- [Event ID 4103 — Module Logging](#event-id-4103--module-logging)
-- [Event ID 800 — PowerShell Operational](#event-id-800--powershell-operational-logging)
-- [Common Malicious PowerShell Patterns](#common-malicious-powershell-patterns)
-- [Detection Strategies](#detection-strategies)
-- [SIEM Queries](#siem-queries)
+- [Overview of PowerShell Logging](#-overview-of-powershell-logging)
+- [Event ID 4104 — ScriptBlock Logging](#-event-id-4104--scriptblock-logging)
+- [Event ID 4103 — Module Logging](#-event-id-4103--module-logging)
+- [Event ID 800 — PowerShell Operational](#-event-id-800--powershell-operational-logging)
+- [Common Malicious PowerShell Patterns](#-common-malicious-powershell-patterns)
+- [Detection Strategies](#-detection-strategies)
+- [SIEM Queries](#-siem-queries)
 
 ---
 
