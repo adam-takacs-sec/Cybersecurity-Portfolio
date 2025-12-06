@@ -26,19 +26,19 @@ Each includes:
 ---
 
 # 🧭 **TABLE OF CONTENTS**
-- [Overview of Web Server Logs](#overview-of-web-server-logs)
-- [IIS Logs](#iis-logs)
-  - [Log Fields](#iis-log-fields)
-  - [Attacker Patterns](#iis-attacker-patterns)
-  - [Real Examples](#iis-real-examples)
-- [Apache Logs](#apache-logs)
-  - [Common Formats](#apache-common-formats)
-  - [Attacker Patterns](#apache-attacker-patterns)
-- [NGINX Logs](#nginx-logs)
-  - [Default Log Format](#nginx-default-log-format)
-  - [Attacker Patterns](#nginx-attacker-patterns)
-- [Web Exploitation Detection](#web-exploitation-detection)
-- [SIEM Queries](#siem-queries)
+- [Overview of Web Server Logs](#-overview-of-web-server-logs)
+- [IIS Logs](#-iis-logs)
+  - [Log Fields](#-iis-log-fields)
+  - [Attacker Patterns](#-iis-attacker-patterns)
+  - [Real Examples](#-iis-real-examples)
+- [Apache Logs](#-apache-logs)
+  - [Common Formats](#-apache-common-formats)
+  - [Attacker Patterns](#-apache-attacker-patterns)
+- [NGINX Logs](#-nginx-logs)
+  - [Default Log Format](#-nginx-default-log-format)
+  - [Attacker Patterns](#-nginx-attacker-patterns)
+- [Web Exploitation Detection](#-web-exploitation-detection)
+- [SIEM Queries](#-siem-queries)
 
 ---
 
@@ -363,5 +363,6 @@ WebLogs
 # 🎯 **End of Section 8**
 This section gives SOC analysts and detection engineers full visibility into web exploitation activity across IIS, Apache, and NGINX logs, including webshell behavior, SQLi, LFI/RFI, and attacker patterns.
 
-Next:  
-➡️ **Section 9 — Cloud Logs**
+---
+
+### ➡️ Next: [Section 9 — Cloud Logs](./09_cloud_logs.md)
