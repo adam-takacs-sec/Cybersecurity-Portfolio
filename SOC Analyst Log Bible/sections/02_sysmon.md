@@ -21,7 +21,7 @@ detection engineering, and incident response.
 - [Event ID 8 — CreateRemoteThread](#-event-id-8--createremotethread)
 - [Event ID 10 — Process Access](#-event-id-10--process-access)
 - [Event ID 11 — File Created](#-event-id-11--file-created)
-- [Event ID 12–13–14 — Registry Events](#-event-id-12-13-14--registry-events)
+- [Event ID 12–13–14 — Registry Events](#-event-id-121314--registry-events)
 - [Event ID 22 — DNS Query](#-event-id-22--dns-query)
 - [Event ID 23 — File Deleted](#-event-id-23--file-deleted)
 - [Event ID 25 — Process Tampering](#-event-id-25--process-tampering)
