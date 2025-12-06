@@ -10,15 +10,15 @@ MITRE ATT&CK mapping, real log examples, and detection logic for SIEM.**
 
 # 🧭 **TABLE OF CONTENTS**
 - [4624 - Successful Logon](#-4624---successful-logon)
-- [4625 — Failed Logon](#4625--failed-logon)
-- [4672 — Special Privileges Assigned](#4672--special-privileges-assigned)
-- [4688 — New Process Created](#4688--new-process-created)
-- [4648 — Logon with Explicit Credentials](#4648--logon-with-explicit-credentials)
-- [4634 — Logoff](#4634--logoff)
-- [4768 — Kerberos Authentication (TGT Request)](#4768--kerberos-authentication-tgt-request)
-- [4769 — Kerberos Service Ticket (TGS)](#4769--kerberos-service-ticket-tgs)
-- [4776 — NTLM Authentication](#4776--ntlm-authentication)
-- [7045 — New Service Installed (System Log)](#7045--a-service-was-installed-system-log)
+- [4625 — Failed Logon](#-4625--failed-logon)
+- [4672 — Special Privileges Assigned](#-4672--special-privileges-assigned)
+- [4688 — New Process Created](#-4688--new-process-created)
+- [4648 — Logon with Explicit Credentials](#-4648--logon-with-explicit-credentials)
+- [4634 — Logoff](#-4634--logoff)
+- [4768 — Kerberos Authentication (TGT Request)](#-4768--kerberos-authentication-tgt-request)
+- [4769 — Kerberos Service Ticket (TGS)](#-4769--kerberos-service-ticket-tgs)
+- [4776 — NTLM Authentication](#-4776--ntlm-authentication)
+- [7045 — New Service Installed (System Log)](#-7045--a-service-was-installed-system-log)
 
 ---
 
