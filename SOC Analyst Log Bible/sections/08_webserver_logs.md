@@ -38,7 +38,7 @@ Each includes:
   - [Default Log Format](#-nginx-default-log-format)
   - [Attacker Patterns](#-nginx-attacker-patterns)
 - [Web Exploitation Detection](#-web-exploitation-detection)
-- [SIEM Queries](#-siem-queries)
+- [SIEM Queries](#-siem-detection-queries)
 
 ---
 
