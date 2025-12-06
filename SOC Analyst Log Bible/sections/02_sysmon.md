@@ -12,7 +12,7 @@ detection engineering, and incident response.
 ---
 
 # 🧭 **TABLE OF CONTENTS**
-- [Overview of Sysmon](#overview-of-sysmon)
+- [Overview of Sysmon](#-overview-of-sysmon)
 - [Sysmon Configuration Importance](#sysmon-configuration-importance)
 - [Event ID 1 — Process Creation](#event-id-1--process-creation)
 - [Event ID 2 — File Creation Time Changed](#event-id-2--file-creation-time-changed)
