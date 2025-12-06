@@ -1,93 +1,76 @@
-# Ádám – Practical Cybersecurity Portfolio
+# 🔐 Ádám – Practical Cybersecurity Portfolio
 
-Hands-on cybersecurity projects, SIEM implementations, incident response cases, log analysis, network investigation, and lab architectures — all built from scratch on an ARM-based Mac environment.
+Hands-on cybersecurity projects, SOC analysis work, log investigation, and attack simulations — built across a hybrid lab environment combining local ARM virtualization and cloud infrastructure.
 
-This repository documents my practical journey toward becoming a **Junior SOC Analyst / Cybersecurity Analyst**, focusing on real-world skills and demonstrable projects.
-
----
-
-## 🔥 Goals
-
-- Build a complete home cybersecurity lab (UTM + Docker + Linux)
-- Deploy and configure Wazuh SIEM in an ARM environment
-- Create custom detection rules, alerts, and log pipelines
-- Process and analyze real attack traffic (pcaps, brute force, scanning)
-- Write professional incident response case studies
-- Understand MITRE ATT&CK techniques through hands-on examples
+This repository documents my practical journey toward becoming a Junior SOC Analyst / Cybersecurity Analyst, focusing on real-world skills, SIEM work, and detection engineering.
 
 ---
 
-## 🧱 Lab Architecture
+## 📦 Repository Structure (Overview)
 
-Full documentation here:  
-➡️ [00_lab-architecture](./00_lab-architecture)
+This portfolio currently contains three main areas:
 
-High-level overview:
-
-- **Ubuntu Server (ARM)** – SIEM, Wazuh Manager, Docker services  
-- **Ubuntu Desktop (ARM)** – SOC analyst workstation (Wireshark, analysis tools)  
-- **Kali Linux (ARM)** – attack simulation, scanning, pcap generation  
+### **1. SOC Analyst Log Bible**
+➡️ `/log-bible/`  
+A comprehensive, from-scratch reference covering Windows logs, Sysmon, Linux logs, network telemetry, cloud audit logs, and EDR behavior.  
+Designed as a practical guide for SOC analysts and blue teamers.
 
 ---
 
-## 📂 Project Index
+### **2. Attack Documentation**
+➡️ `/attacks/`  
+Focused, practical explanations of real attack techniques.  
+Includes:
+- Password Attacks (Brute Force, Spraying, Credential Abuse)
 
-### **1️⃣ Ubuntu Server Setup**
-➡️ [01_ubuntu-server-setup](./01_ubuntu-server-setup)  
-Base installation, hardening, Docker engine installation, and preparation for SIEM deployment.
-
----
-
-### **2️⃣ Wazuh SIEM Installation (Docker, ARM)**
-➡️ [02_wazuh-installation](./02_wazuh-installation)  
-Wazuh Manager + Indexer + Dashboard deployment in an ARM-native Docker environment.
+More attack topics will be added later as the portfolio evolves.
 
 ---
 
-### **3️⃣ Custom Wazuh Rules**
-➡️ [03_wazuh-custom-rules](./03_wazuh-custom-rules)  
-Handwritten detection rules, alert mappings, test cases, and log generation.
+### **3. Practical Cybersecurity Projects**
+➡️ `/projects/`  
+This section will contain scenario-based projects demonstrating full attack & detection workflows (3–4 self-contained cases).  
+Currently under construction — content will be added gradually.
 
 ---
 
-### **4️⃣ Sysmon for Linux (ARM)**
-➡️ [04_sysmon-linux](./04_sysmon-linux)  
-Sysmon events → Wazuh ingestion → custom Sigma/Sysmon-based detection.
+## 🧱 Lab Environment (High-Level)
+
+My cybersecurity lab is built as a **hybrid environment**:
+
+### **Local (ARM Mac – UTM)**
+- **Kali Linux (ARM)**  
+  Used for attack simulation, scanning, enumeration, exploitation, and traffic generation.
+
+### **Cloud (Google Cloud Platform – VM instances)**
+- **Ubuntu Server (Wazuh SIEM + Docker services)**  
+  Central log collection, analysis, detection engineering.
+  
+- **Windows Server (victim machine / AD / Sysmon)**  
+  Produces real authentication, service, PowerShell, Sysmon, and attack telemetry.
+
+This hybrid setup closely resembles a real enterprise SOC environment and enables:
+
+- remote log ingestion  
+- multi-host attack paths  
+- real identity attacks  
+- realistic detection pipelines  
 
 ---
 
-### **5️⃣ Incident Response Case Studies**
-➡️ [05_incident-response-cases](./05_incident-response-cases)  
-Realistic mini-investigations, log analysis, and MITRE ATT&CK mapping.
+## 🧭 Philosophy
 
----
+I focus on **practical, reproducible, hands-on work**:
 
-## 🖼️ Screenshots
+- real logs  
+- real detections  
+- real attack traffic  
+- real SIEM pipelines  
 
-All screenshots used in reports, detections, SIEM dashboards, and lab steps:  
-➡️ [screenshots](./screenshots)
-
----
-
-## 📑 Documentation Style
-
-Every project contains:
-
-- Clear overview  
-- Step-by-step technical execution  
-- Commands used  
-- Architecture diagrams (when needed)  
-- Screenshots (key evidence only)  
-- Detection logic  
-- Results + findings  
-- MITRE ATT&CK technique mapping  
-- Short reflection  
-
-Everything is optimized for **interview readability**.
+No theory without demonstration.
 
 ---
 
 ## 📬 Contact
 
-If you're a recruiter or cybersecurity professional interested in my work, feel free to reach out.
-
+If you're a recruiter or cybersecurity professional interested in my work or experience, feel free to reach out.
