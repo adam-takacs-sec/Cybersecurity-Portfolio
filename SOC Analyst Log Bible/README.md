@@ -1,130 +1,129 @@
-# 📘 SOC Analyst Log Bible
+# 📘 SOC Analyst Log Bible  
 ### *The Ultimate Log Reference for Blue Team, DFIR, SOC, Threat Hunting & Detection Engineering*
 
-A SOC analyst munkájának 90%-a **logok értelmezéséből**, korrelálásából és elemzéséből áll.  
-Ez a dokumentum a világ egyik **legteljesebb és leggyakorlatiasabb log-referenciája**, amely lefedi:
+A SOC analyst's work is 90% log interpretation, correlation, and analysis.  
+This project is one of the **most complete and practical log references in the world**, covering:
 
-- Windows Event Logs (Security, System)
-- Sysmon (minden fontos Event ID példával)
-- PowerShell Operational & ScriptBlock logs
-- Windows Defender & Task Scheduler
-- Linux auth.log, syslog, auditd, systemd logs
-- Firewall logs (Palo Alto, Fortinet, Cisco ASA)
-- VPN logs (AnyConnect, GlobalProtect)
-- DNS logging (server + endpoint)
-- Proxy & Web Gateway logs
-- DHCP logs (lateral movement detection)
-- IIS, Apache, NGINX logs
-- Cloud provider audit logs (Azure, AWS, GCP)
-- EDR telemetry (vendor-agnostic breakdown)
-- MITRE ATT&CK mapping minden eseményhez
-- "Alert Relevance" szintek SOC analystek számára
+- Windows Event Logs (Security, System)  
+- Sysmon (all important Event IDs with examples)  
+- PowerShell Operational & ScriptBlock logs  
+- Windows Defender & Task Scheduler  
+- Linux logs (auth.log, syslog, auditd, systemd)  
+- Firewall logs (Palo Alto, Fortinet, Cisco ASA)  
+- VPN logs (AnyConnect, GlobalProtect)  
+- DNS logging (server + endpoint)  
+- Proxy & Web Gateway logs  
+- DHCP logs (lateral movement detection)  
+- IIS, Apache, NGINX logs  
+- Cloud provider audit logs (Azure, AWS, GCP)  
+- EDR telemetry (vendor-agnostic behavioral breakdown)  
+- MITRE ATT&CK mapping for every event type  
+- "Alert Relevance" scoring for SOC analysts  
 
-Ez a projekt azért készült, hogy **minden fontos logforrást egy helyen**, érthetően, példákkal és magyarázatokkal együtt mutasson be.  
-A cél: **SOC analystként soha többé ne legyen “nem tudom mi ez az event” pillanat.**
+This project brings **every important log source into one place**, explained clearly with examples and practical guidance.  
+The goal: *never again have a moment of “I don’t know what this event means”* as a SOC analyst.
 
 ---
 
-# 📚 Tartalomjegyzék
+# 📚 **Table of Contents**
 
-### 🔹 1. Windows Logok
-- Security Log (Event IDs: 4624, 4625, 4672, 4688…)
-- System Log (7045, 7036…)
-- Application Log (fontosabb típusok)
+### 🔹 **1. Windows Logs**
+- Security Log (4624, 4625, 4672, 4688…)  
+- System Log (7045, 7036…)  
+- Application Log (important types)
 
-### 🔹 2. Sysmon Logok
-- Event ID-k részletes magyarázata
-- MITRE TTP mapping
-- Real-world attacker examples
+### 🔹 **2. Sysmon Logs**
+- Detailed breakdown of Event IDs  
+- MITRE TTP mapping  
+- Real-world attacker examples  
 
-### 🔹 3. PowerShell Logs
-- ScriptBlock (4104)
-- Module Logging (4103)
-- Pipeline Execution (800)
-- Malicious examples
+### 🔹 **3. PowerShell Logs**
+- ScriptBlock (4104)  
+- Module Logging (4103)  
+- Pipeline Execution (800)  
+- Malicious patterns and examples  
 
-### 🔹 4. Windows Defender Logs
-- Malware detection (1116, 1117)
-- Behavior blocking (5010)
+### 🔹 **4. Windows Defender Logs**
+- Malware detection (1116, 1117)  
+- Behavior blocking (5010)  
 - Config tampering (5007)
 
-### 🔹 5. Task Scheduler Logs
+### 🔹 **5. Task Scheduler Logs**
 - Persistence detection (106, 140, 200)
 
-### 🔹 6. Linux Logs
-- auth.log
-- syslog
-- auditd (EXECVE, SYSCALL, PATH…)
-- sudo logs
-- sshd logs
-- persistence detection
+### 🔹 **6. Linux Logs**
+- auth.log  
+- syslog  
+- auditd (EXECVE, SYSCALL, PATH…)  
+- sudo events  
+- sshd logs  
+- persistence detection  
 
-### 🔹 7. Network Logs
-- Firewall logs (Palo Alto, Fortinet, Cisco ASA)
-- VPN logs (AnyConnect, GlobalProtect)
-- DNS logs (server + endpoint)
-- Proxy logs (Squid, Bluecoat)
+### 🔹 **7. Network Logs**
+- Firewalls (Palo Alto, Fortinet, Cisco ASA)  
+- VPN logs (AnyConnect, GlobalProtect)  
+- DNS logs (server + endpoint)  
+- Proxy logs (Squid, BlueCoat)
 
-### 🔹 8. Webserver Logs
-- Apache
-- NGINX
-- IIS (cs-method, sc-status események)
+### 🔹 **8. Web Server Logs**
+- Apache  
+- NGINX  
+- IIS (cs-method, sc-status, execution analysis)
 
-### 🔹 9. Cloud Logs
-- Azure AD Sign-in logs
-- AWS CloudTrail
-- GCP Audit Logs
-- Identity & access patterns
+### 🔹 **9. Cloud Logs**
+- Azure AD Sign-in logs  
+- AWS CloudTrail  
+- GCP Audit Logs  
+- Identity & access behavior patterns  
 
-### 🔹 10. EDR Telemetry
-- Process tree & ancestry
-- Behavior-based detections
-- Network telemetry
-- Lateral movement detection
-
----
-
-# 🎯 Célja ennek a projektnek
-Ez a dokumentum:
-
-- **SOC analysteknek**  
-- **Threat huntereknek**  
-- **Blue teamereknek**  
-- **Cyber defense tanulóknak**  
-készült.
-
-A cél az, hogy bárki:
-
-✔ felismerje a támadásokat logokból  
-✔ megértse a folyamatok összefüggését  
-✔ lássa a MITRE ATT&CK relevanciát  
-✔ hatékonyabban vizsgálja az eseményeket  
-✔ könnyebben építsen detekciókat SIEM-ben
+### 🔹 **10. EDR Telemetry**
+- Process tree & ancestry  
+- Behavioral detections  
+- Network telemetry  
+- Lateral movement detection  
 
 ---
 
-# 🧠 Felépítés
+# 🎯 **Purpose of This Project**
 
-Minden logforrásnál szerepelni fog:
+This document is designed for:
 
-### • Event ID  
-### • Mit jelent?  
-### • Miért fontos a SOC számára?  
-### • Melyik MITRE technikához tartozik?  
-### • Real attacker example log  
-### • Mit kell keresni benne?  
-### • Hogyan néz ki SIEM-ben?  
+- SOC Analysts  
+- Threat Hunters  
+- Blue Team Engineers  
+- Cyber Defense Students  
 
-Ez lesz az eddigi **legpraktikusabb és legkönnyebben használható** log-hivatkozási anyag.
+Its goal is to empower anyone to:
 
----
-
-# 🚀 Továbblépés
-Nyisd meg a külön fejezeteket a `/sections` mappában.  
-Ha új logforrásokat akarsz hozzáadni, PR-t is küldhetsz.
+✔ Identify attacker behavior from logs  
+✔ Understand relationships between events  
+✔ Map logs to MITRE ATT&CK  
+✔ Perform more effective investigations  
+✔ Build stronger SIEM detections  
 
 ---
 
-Készen állsz arra, hogy úgy értsd a logokat, mint egy valódi SOC analyst?
+# 🧠 **Structure**
 
-**Let’s hunt.** 🔍
+Every log source includes:
+
+- **Event ID**  
+- **What it means**  
+- **Why it matters for SOC**  
+- **MITRE ATT&CK mapping**  
+- **Real attacker example log**  
+- **What to look for**  
+- **How it appears in SIEM queries**
+
+This is designed to be the **most practical and easy-to-use log reference** available.
+
+---
+
+# 🚀 **Next Steps**
+
+Open the individual sections in the `/sections` directory.  
+If you want to add new log sources, feel free to submit a PR.
+
+Are you ready to understand logs the way a real SOC analyst does?
+
+**Let’s hunt. 🔍**
