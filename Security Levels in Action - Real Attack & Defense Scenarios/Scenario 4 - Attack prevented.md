@@ -177,7 +177,7 @@ This demonstrates the human improvement since previous scenarios.
 
 ---
 
-# 🟥 3.6 Attempt 7 — Try Zero-Interaction Exploits
+# 🟥 3.6 Attempt 6 — Try Zero-Interaction Exploits
 
 Attacker tries generic exploit scanning:
 
