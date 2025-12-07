@@ -2,7 +2,7 @@
 **Security Levels in Action – Pre-Attack Information Gathering**
 
 > ⚠️ Lab-only. All names, companies and user data are fictional.  
-> This stage is performed **before Scenario 1, 2, and 3**, and prepares all intelligence the attacker will use.
+> This stage is performed **before Scenario 1, 2, 3 and 4**, and prepares all intelligence the attacker will use.
 
 This document simulates realistic OSINT techniques used to gather information about a company, an employee, and their environment — **before any intrusion attempts**.
 
@@ -12,12 +12,6 @@ The goal is to build:
 - **username seeds**  
 - **password seeds**  
 - an **external IP capture** (user workstation or corporate gateway IP)  
-
-This info will be used in:
-- Scenario 1 → Username discovery (minimal)  
-- Scenario 2 → OSINT-based password attack  
-- Scenario 3 → Phishing + credential theft  
-- Scenario 4 → Hardened environment comparison  
 
 ---
 
@@ -216,19 +210,6 @@ Marvel1999!
 Marvel!99
 EOF
 \`\`\`
-
----
-
-# 8. What This OSINT Stage Enables
-
-This pre-stage provides intelligence for all later scenarios:
-
-| Scenario | What OSINT is used for |
-|----------|------------------------|
-| **1 — Brute Force** | Username guess (basic) |
-| **2 — OSINT Password Attack** | Username list + password seeds |
-| **3 — Phishing** | IP capture + credential theft |
-| **4 — Hardened Environment** | Contrast: how defenses stop these techniques |
 
 ---
 
