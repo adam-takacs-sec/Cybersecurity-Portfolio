@@ -1,218 +1,180 @@
 # 🕵️ 00 — OSINT Pre-Stage  
 **Security Levels in Action – Pre-Attack Information Gathering**
 
-> ⚠️ Lab-only. All names, companies and user data are fictional.  
-> This stage is performed **before Scenario 1, 2, 3 and 4**, and prepares all intelligence the attacker will use.
+> ⚠️ Lab-only. All names, companies, accounts, domains and data are entirely fictional and used strictly for educational purposes.
 
-This document simulates realistic OSINT techniques used to gather information about a company, an employee, and their environment — **before any intrusion attempts**.
+Before initiating Scenario 1 and Scenario 2, I performed a complete OSINT reconnaissance phase.  
+My goal was to gather enough publicly available information to build:
 
-The goal is to build:
-- a **company profile**  
-- an **employee profile**  
-- **username seeds**  
-- **password seeds**  
-- an **external IP capture** (user workstation or corporate gateway IP)  
+- a company profile  
+- a targeted employee profile  
+- internal username candidates  
+- password seeds based on personal data  
+- the user’s external IP address via phishing and tracking  
 
----
-
-# 1. Company Profiling (Fictional)
-
-The attacker identifies a target organization:
-
-- Company name: \`Northwind Logistics Kft\`  
-- Industry: Logistics / shipping  
-- Headquarters: Budapest  
-- Public website: \`northwindlogistics.example\`  
-- Public social media pages (fictional): Facebook, LinkedIn  
-
-The attacker reviews:
-- employee posts  
-- company news  
-- visible employees in photos  
-- job descriptions (technology hints)  
+This OSINT stage simulates how a real attacker prepares before attempting any intrusion.
 
 ---
 
-# 2. Employee Profiling (OSINT)
+## 1. Company Profiling — Hogwarts Logistics Ltd.
 
-From public social media information, the attacker identifies one employee:
+I began by examining the publicly visible footprint of the target organization.
 
-### Target Employee (fictional)
-- Name: \`Anna Kovács\`  
-- Role: \`Customer Support Specialist\`  
-- Department: Customer Operations  
-- Email format at company: \`firstname.lastname@northwindlogistics.example\`  
-- Reconstructed email: \`anna.kovacs@northwindlogistics.example\`  
+**Company name:** Hogwarts Logistics Ltd.  
+**Industry:** Logistics / warehousing / delivery  
+**Location:** London, United Kingdom  
+**Public website:** `hogwartslogistics.com`  
+**Public email:** `info@hogwartslogistics.com`
 
-### Personal details extracted from OSINT
-- Dog’s name: \`Bogi\`  
-- Dog birth year: \`2020\`  
-- User birthdate: \`1999-07-14\`  
-- Hobbies: running, volleyball, Marvel movies  
+I visited the company’s Facebook page, where I could observe:
 
-These will be used to build password patterns later.
+- branding and logo  
+- images of the warehouse and office building  
+- interactions from users who appear to be employees  
+- recent marketing posts  
+- visible names and likes connected to real profiles  
 
----
+These details confirmed that the company has an active public presence—an ideal OSINT starting point.
 
-# 3. Username Format Enumeration
-
-Most Windows environments use predictable username formats.  
-From the email \`anna.kovacs@northwindlogistics.example\`, attackers derive:
-
-- \`anna.kovacs\`  
-- \`akovacs\`  
-- \`kovacsa\`  
-- \`anna.k\`  
-
-Save this list on Kali for Scenario 2:
-
-\`\`\`bash
-echo -e "anna.kovacs\nakovacs\nkovacsa\nanna.k" > usernames.txt
-\`\`\`
-
-**Screenshot later:**  
-- Show \`usernames.txt\` inside terminal.
+**Screenshot placeholder:**  
+`/assets/osint/company_facebook_page.jpg`
 
 ---
 
-# 4. Password Seed Collection (OSINT-Based)
+## 2. Employee Profiling — Hermione Granger
 
-Extracted details become password “building blocks”:
+Next, I searched for employees who publicly interact with the company online.  
+One profile stood out immediately: **Hermione Granger**.
 
-- \`Bogi\`  
-- \`Bogi2020\`  
-- \`Bogi1999\`  
-- \`0714\`  
-- \`Bogi!\`  
-- \`Marvel1999!\`  
-- \`Running99!\`  
+### 2.1 Public Profile Information
 
-These will generate a focused password list used in Scenario 2.
+From her Facebook profile:
 
----
+- **Works at:** Hogwarts Logistics Ltd.  
+- **Lives in:** London  
+- **Education:** Hogwarts School of Witchcraft and Wizardry  
+- **Relationship:** In a relationship with Ron Weasley  
 
-# 5. Identifying the External Server IP
+### 2.2 Basic Info (About Page)
 
-The attacker scans the public-facing server (Windows Server hosted in GCP).
+Her “Contact and basic info” section revealed:
 
-Recorded:
-- Windows Server (RDP) public IP: \`34.123.45.67\` (example)
+- **Gender:** Female  
+- **Birthdate:** September 19  
+- **Birth year:** 1999  
 
-Add optional hostname mapping on Kali:
+So I recorded the following OSINT identifiers:
 
-\`\`\`bash
-echo "34.123.45.67   rdp.northwindlogistics.example" | sudo tee -a /etc/hosts
-\`\`\`
+- `BirthYear = 1999`  
+- `DayMonth = 0919`
 
-**This IP belongs to the corporate server — not the employee workstation.**
+### 2.3 Public Posts — Pet Information
 
-We still need the **user’s external IP**, which cannot be found via OSINT alone.
+One of her posts was especially valuable:
 
----
+> “Crookshanks just turned 5 today! 🧡  
+> Still the fluffiest little troublemaker.”
 
-# 6. Capturing the User Workstation External IP  
-**(This will be used in Scenario 3, but happens BEFORE all scenarios)**
+From this I learned:
 
-The attacker sends a harmless link to the employee — when clicked, the attacker’s server logs:
+- **Pet name:** Crookshanks  
+- **Pet age mentioned:** 5 years  
+- The pet has emotional significance  
+- She posts personal milestones publicly  
 
-- the user's external IP  
-- user agent  
-- OS  
-- browser  
+Pet names and birth years are extremely common password components.
 
-This simulates real-world phishing infrastructure used in APT & red team operations.
-
-## 6.1 Set up a simple IP-capture server on Kali
-
-Create a folder:
-
-\`\`\`bash
-mkdir ip-capture
-cd ip-capture
-\`\`\`
-
-Create \`server.py\`:
-
-\`\`\`python
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import logging
-
-class RequestHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        logging.info(f"Victim IP: {self.client_address[0]}, User-Agent: {self.headers.get('User-Agent')}")
-        self.send_response(200)
-        self.send_header('Content-type', 'text/html')
-        self.end_headers()
-        self.wfile.write(b"<h1>Tracking Error</h1><p>Please try again later.</p>")
-
-def run():
-    logging.basicConfig(filename='ip_log.txt', level=logging.INFO)
-    server_address = ('0.0.0.0', 8080)
-    httpd = HTTPServer(server_address, RequestHandler)
-    print("Listening on port 8080...")
-    httpd.serve_forever()
-
-if __name__ == "__main__":
-    run()
-\`\`\`
-
-Run the server:
-
-\`\`\`bash
-python3 server.py
-\`\`\`
+**Screenshot placeholders:**  
+`/assets/osint/hermione_profile_about.jpg`  
+`/assets/osint/hermione_profile_posts.jpg`
 
 ---
 
-# 6.2 User clicks → attacker obtains:
+## 3. Username Format Enumeration
 
-Example log entry in \`ip_log.txt\`:
+Based on the company’s public email format (`info@hogwartslogistics.com`), I inferred a likely employee pattern:
 
-```
-Victim IP: 89.132.17.44, User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
-```
+`firstname.lastname@companydomain`
 
-This IP represents either:
-- the user workstation’s external IP, or  
-- the corporate outbound gateway IP  
+Therefore, Hermione’s assumed corporate email is:
 
-Both are **useful reconnaissance intelligence**.
+- **`hermione.granger@hogwartslogistics.com`**
 
-**Screenshot:**  
-- Display \`ip_log.txt\` after a click occurs.
+From this pattern I generated several internal username candidates:
 
----
+- `hermione.granger`  
+- `hgranger`  
+- `grangerh`  
+- `hermione.g`  
+- `h.granger`  
 
-# 7. OSINT-Based Password List Generation
+These values were saved into a username wordlist to be used in **Scenario 2 – OSINT-based credential guessing**.
 
-Create the final password list for Scenario 2:
-
-\`\`\`bash
-cat << 'EOF' > osint_passwords.txt
-Bogi
-Bogi1
-Bogi01
-Bogi99
-Bogi1999
-Bogi2020
-Bogi2024
-Bogi2024!
-Bogi0714
-Bogi0714!
-Bogi!2024
-BogiKovacs1
-BogiKovacs!
-Anna1999
-Anna0714
-Anna!1999
-Running99!
-Marvel1999!
-Marvel!99
-EOF
-\`\`\`
+**Screenshot placeholder:**  
+`/assets/osint/usernames_file.jpg`
 
 ---
 
-# ✔ End of OSINT Pre-Stage
+## 4. Password Seed Collection (OSINT-Based)
 
-Proceed to **Scenario 1 — Basic Brute Force Attack** once all OSINT data is collected.
+Using the personal data I discovered, I compiled a list of meaningful password seeds.
+
+### 4.1 Raw Seeds Extracted
+
+- `Hermione`  
+- `Granger`  
+- `HG`  
+- `1999`  
+- `0919`  
+- `Crookshanks`  
+- `5`  
+- `Weasley`  
+- `Hogwarts` / `HogwartsLogistics`
+
+### 4.2 Common User Patterns Applied
+
+To generate realistic password candidates, I applied common transformation habits:
+
+- appending birth years → `1999`  
+- appending personal numbers → `5`, `19`  
+- appending dates → `0919`  
+- capitalized variations  
+- adding simple suffixes → `!`, `?`, `_`, `#`  
+- light leetspeak → `H0gwarts`  
+- concatenations → `CrookshanksHermione`, etc.
+
+These transformations allowed me to produce a focused but highly effective custom password list.
+
+---
+
+## 5. Phishing Pretext & External IP Capture
+
+Since I required Hermione’s external IP address for future stages, I crafted a realistic but generic pretext:
+
+**Email subject:** `Mandatory Security Policy Update – Action Required by 6 December`  
+**Sender (spoofed):** `hr-compliance@hogwartslogistic.com`  
+**Call to action:** “Review Updated Policy”
+
+The goal of this phishing email was not credential theft—it was simply to get Hermione to click a link that would load a tracking page on my server.
+
+### 5.1 Phishing Email Screenshot  
+`/assets/osint/phishing_email.jpg`
+
+### 5.2 Fake Policy Page
+
+The link directed her to a page styled as a corporate compliance update.  
+Behind the scenes, the page logged her:
+
+- external IP address  
+- browser User-Agent  
+- timestamp  
+
+This information is crucial for validating the victim’s environment very early in the process.
+
+**Screenshot placeholder:**  
+`/assets/osint/phishing_policy_page.jpg`
+
+### 5.3 Logged Result
+
+A sample log entry from my tracking server:
+
