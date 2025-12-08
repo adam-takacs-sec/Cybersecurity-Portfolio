@@ -36,10 +36,7 @@ I visited the company’s Facebook page, where I could observe:
 
 These details confirmed that the company has an active public presence—an ideal OSINT starting point.
 
-**Screenshot placeholder:**  
-`/assets/osint/company_facebook_page.jpg`
 ![Hogwarts Logistics Ltd. Facebook page](/Assets/OSINT/Hogwarts%20Logistics%20Ltd.%20Home%20page.jpg)
-
 
 ---
 
