@@ -160,8 +160,9 @@ Since I required Hermione’s external IP address for future stages, I crafted a
 
 The goal of this phishing email was not credential theft—it was simply to get Hermione to click a link that would load a tracking page on my server.
 
-### 5.1 Phishing Email Screenshot  
-`/assets/osint/phishing_email.jpg`
+![Phishing Email – Security Policy Update Pretext](/Assets/OSINT/Phhishing%20email%20OSINT.jpg)
+*Figure 5 — The phishing email I sent to Hermione, disguised as a mandatory “Security & Data Handling Policy Update.” The purpose was to deliver a tracking link to capture her external IP address.*
+
 
 ### 5.2 Fake Policy Page
 
@@ -174,8 +175,9 @@ Behind the scenes, the page logged her:
 
 This information is crucial for validating the victim’s environment very early in the process.
 
-**Screenshot placeholder:**  
-`/assets/osint/phishing_policy_page.jpg`
+![Phishing Landing Page – Fake Policy Acknowledgement](/Assets/OSINT/Phishing%20email%20acknowledge.png)
+*Figure 6 — The phishing landing page presented after clicking the email link. Although it appears to display a legitimate policy acknowledgement, its primary purpose is to log the victim’s IP address and User-Agent.*
+
 
 ### 5.3 Logged Result
 
