@@ -37,6 +37,7 @@ I visited the company’s Facebook page, where I could observe:
 These details confirmed that the company has an active public presence—an ideal OSINT starting point.
 
 ![Hogwarts Logistics Ltd. Facebook page](/Assets/OSINT/Hogwarts%20Logistics%20Ltd.%20Home%20page.jpg)
+*Figure 1 — Public Facebook page of Hogwarts Logistics Ltd. This page provides initial OSINT indicators such as branding, employee interactions, public posts, and visible company infrastructure.*
 
 ---
 
@@ -83,9 +84,12 @@ From this I learned:
 
 Pet names and birth years are extremely common password components.
 
-**Screenshot placeholders:**  
-`/assets/osint/hermione_profile_about.jpg`  
-`/assets/osint/hermione_profile_posts.jpg`
+![Hermione Granger – Facebook Main Profile](/Assets/OSINT/Hermione%20Granger%20Posts%20page.jpg)
+*Figure 2 — Hermione Granger’s public Facebook profile. This confirms her employment at Hogwarts Logistics Ltd. and exposes additional personal identifiers valuable for OSINT.*
+
+![Hermione Granger – Facebook About Page](/Assets/OSINT/Hermione%20Granger%20About%20page.jpg)
+*Figure 3 — Hermione’s “About” page revealing her birthdate (19 September) and birth year (1999). Birth-related information is a common element in user-created passwords.*
+
 
 ---
 
