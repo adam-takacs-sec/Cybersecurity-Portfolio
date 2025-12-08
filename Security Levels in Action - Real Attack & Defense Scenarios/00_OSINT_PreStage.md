@@ -160,7 +160,7 @@ Since I required Hermione’s external IP address for future stages, I crafted a
 
 The goal of this phishing email was not credential theft—it was simply to get Hermione to click a link that would load a tracking page on my server.
 
-![Phishing Email – Security Policy Update Pretext](/Assets/OSINT/Phhishing%20email%20OSINT.jpg)
+![Phishing Email – Security Policy Update Pretext](/Assets/OSINT/Phishing%20email%20OSINT.jpg)
 *Figure 5 — The phishing email I sent to Hermione, disguised as a mandatory “Security & Data Handling Policy Update.” The purpose was to deliver a tracking link to capture her external IP address.*
 
 
