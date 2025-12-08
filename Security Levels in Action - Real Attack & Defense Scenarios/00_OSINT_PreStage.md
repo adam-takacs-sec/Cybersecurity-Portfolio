@@ -38,6 +38,8 @@ These details confirmed that the company has an active public presence—an idea
 
 **Screenshot placeholder:**  
 `/assets/osint/company_facebook_page.jpg`
+![Hogwarts Logistics Ltd. Facebook page](/assets/osint/hogvarts_logistics_ltd.home_page.jpg)
+
 
 ---
 
