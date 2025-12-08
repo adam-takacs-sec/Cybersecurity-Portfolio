@@ -178,3 +178,68 @@ This information is crucial for validating the victim’s environment very early
 
 A sample log entry from my tracking server:
 
+Victim IP: 89.xxx.xxx.xxx  
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)  
+Timestamp: 2025-12-04 09:52:31
+
+
+This confirmed that Hermione clicked the link and provided me with the necessary network fingerprint.
+
+**Screenshot:**  
+`/assets/osint/ip_capture_log.jpg`
+
+---
+
+## 6. Final OSINT-Based Password List
+
+Using all seeds and transformation rules, I generated a targeted password list (`osint_passwords.txt`).  
+This list is intentionally compact, containing only passwords derived from Hermione’s real personal data.
+
+Example entries:
+
+- Crookshanks  
+- Crookshanks1  
+- Crookshanks5  
+- Crookshanks19  
+- Crookshanks2019  
+- Crookshanks2019!  
+- Crookshanks0919  
+- Crookshanks0919!  
+- Crookshanks#5  
+- Crooks5!  
+- Hermione1999  
+- Hermione_1999  
+- Hermione1999!  
+- Hermione0919  
+- Hermione0919!  
+- Hermione#99  
+- HG1999!  
+- HG0919!  
+- Hogwarts1999!  
+- H0gwarts1999!  
+- Weasley99!  
+- CrookshanksHermione99  
+- Crookshanks_Hogwarts19  
+- HL_Crook2019!  
+- Crookshanks5Years!  
+- CrookshanksTurns5!  
+
+This list will be used in **Scenario 2 – OSINT-based username & password guessing**.
+
+---
+
+## ✅ End of OSINT Pre-Stage
+
+At this point I have collected:
+
+- a complete company profile  
+- a detailed employee profile  
+- internal username candidates  
+- a targeted OSINT-derived password list  
+- the victim’s external IP and User-Agent  
+
+With all reconnaissance completed, I can now proceed to:
+
+- **Scenario 1 – Generic Brute Force (baseline)**  
+- **Scenario 2 – OSINT-Based Credential Guessing**
+
