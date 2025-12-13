@@ -30,7 +30,11 @@ The following checks were performed to validate system state:
 - Network configuration
 - Package updates completed successfully
 
-(See screenshots for verification.)
+### System overview
+![Kali fastfetch](../../assets/infrastructure/kali-attacker/fastfetch+others.png)
+
+### First system upgrade
+![Kali first upgrade](../../assets/infrastructure/kali-attacker/first-time-upgrade.png)
 
 ---
 
