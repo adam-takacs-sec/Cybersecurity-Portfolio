@@ -50,7 +50,17 @@ The following checks were performed to validate the SIEM state:
 - Default admin account functional
 - No agents connected (initial baseline state)
 
-(See screenshots for verification.)
+## Screenshots
+
+### Wazuh Dashboard
+![Wazuh Dashboard](../../Assets/Infrastructure/wazuh-siem/wazuh-dashboard.png)
+
+### Wazuh Manager
+![Wazuh Manager running](../../Assets/Infrastructure/wazuh-siem/wazuh-manager.png)
+
+### Wazuh Indexer
+![Wazuh Indexer and Dashboard running](../../Assets/Infrastructure/wazuh-siem/wazuh-indexer.png)
+
 
 ---
 
