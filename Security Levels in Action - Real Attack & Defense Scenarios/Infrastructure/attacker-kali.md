@@ -34,7 +34,7 @@ The following checks were performed to validate system state:
 ![Kali fastfetch](../../assets/infrastructure/kali-attacker/Fastfetch%2Bothers.png)
 
 ### First system upgrade
-![Kali first upgrade](../../assets/infrastructure/kali-attacker/first-time-upgrade.png)
+![Kali first upgrade](../../Assets/Infrastructure/kali-attacker/first-time-upgrade.png)
 
 ---
 
