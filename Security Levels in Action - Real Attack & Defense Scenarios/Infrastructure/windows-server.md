@@ -14,7 +14,7 @@ attack execution and observable SIEM telemetry.
 - Machine type: e2-standard-4
   - vCPU: 4
   - Memory: 16 GB
-- Storage: 80–100 GB Persistent Disk
+- Storage: 80 GB Persistent Disk
 
 ---
 
