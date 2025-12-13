@@ -31,7 +31,7 @@ The following checks were performed to validate system state:
 - Package updates completed successfully
 
 ### System overview
-![Kali fastfetch](../../assets/infrastructure/kali-attacker/Fastfetch%2Bothers.png)
+![Kali fastfetch](../../Assets/Infrastructure/kali-attacker/Fastfetch%2Bothers.png)
 
 ### First system upgrade
 ![Kali first upgrade](../../Assets/Infrastructure/kali-attacker/first-time-upgrade.png)
