@@ -24,8 +24,6 @@ not by architectural intent.
 
 ---
 
-## Operating System Choice Rationale
-
 ### Why Windows Server instead of Windows 10?
 Google Cloud Platform does not provide native Windows 10 images and deploying
 Windows 10 in GCP requires complex workarounds and licensing overhead.
