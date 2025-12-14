@@ -90,7 +90,6 @@ Pet names and birth years are extremely common password components.
 ![Hermione Granger – Facebook About Page](/Assets/OSINT/Hermione%20Granger%20About%20page.jpg)
 *Figure 3 — Hermione’s “About” page revealing her birthdate (19 September) and birth year (1999). Birth-related information is a common element in user-created passwords.*
 
-
 ---
 
 ## 3. Username Format Enumeration
@@ -163,7 +162,6 @@ The goal of this phishing email was not credential theft—it was simply to get 
 ![Phishing Email – Security Policy Update Pretext](/Assets/OSINT/Phishing%20email%20OSINT.jpg)
 *Figure 5 — The phishing email I sent to Hermione, disguised as a mandatory “Security & Data Handling Policy Update.” The purpose was to deliver a tracking link to capture her external IP address.*
 
-
 ### 5.2 Fake Policy Page
 
 The link directed her to a page styled as a corporate compliance update.  
@@ -178,6 +176,172 @@ This information is crucial for validating the victim’s environment very early
 ![Phishing Landing Page – Fake Policy Acknowledgement](/Assets/OSINT/Phishing%20email%20acknowledge.png)
 *Figure 6 — The phishing landing page presented after clicking the email link. Although it appears to display a legitimate policy acknowledgement, its primary purpose is to log the victim’s IP address and User-Agent.*
 
+### 5.2.1 Tracking Server Code (Policy Page + Logging)
+
+> This server does **not** deliver malware or exploits.  
+> Its sole purpose is early-stage validation and reconnaissance (IP + User-Agent + timestamp).
+
+**File:** `policy_server.py`
+
+~~~~python
+from flask import Flask, request, render_template_string, send_file
+from datetime import datetime
+import os
+
+LOGO_PATH = "/tmp/policy_static/hogwarts_orange.png"
+
+app = Flask(__name__)
+
+POLICY_HTML = """
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Hogwarts Logistics – Policy Update</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            color: #1f2937;
+            padding: 40px;
+        }
+        .wrapper {
+            max-width: 720px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+        }
+
+        /* Acknowledgement Box */
+        .acknowledge-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 12px;
+            margin-bottom: 24px;
+        }
+        .ack-icon {
+            font-size: 22px;
+            font-weight: bold;
+            color: #059669;
+            line-height: 1;
+        }
+        .ack-head {
+            font-size: 16px;
+            font-weight: bold;
+            color: #065f46;
+            margin-bottom: 2px;
+        }
+        .ack-text {
+            font-size: 14px;
+            color: #047857;
+            line-height: 1.4;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+        h2 {
+            margin-top: 28px;
+            font-size: 18px;
+        }
+        p {
+            line-height: 1.45;
+            margin-bottom: 14px;
+        }
+        ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+        .small {
+            font-size: 13px;
+            color: #4b5563;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+
+    <div style="display:flex; align-items:center; gap:14px; margin-bottom:20px;">
+        <img src="/logo" alt="Hogwarts Logistics Logo"
+             style="height:48px; width:auto; display:block; border-radius:8px;">
+        <div>
+            <div style="font-size:18px; font-weight:bold;">Hogwarts Logistics Ltd.</div>
+            <div style="font-size:13px; color:#6b7280;">Security & Data Handling Notice</div>
+        </div>
+    </div>
+
+    <h1>Security & Data Handling Policy Update</h1>
+
+    <p>
+        As part of our annual compliance review, the following areas have been updated:
+    </p>
+
+    <ul>
+        <li>Password and credential requirements</li>
+        <li>Remote access rules during the holiday period</li>
+        <li>Data handling and classification guidelines</li>
+        <li>Incident reporting workflow</li>
+    </ul>
+
+    <h2>Your acknowledgement</h2>
+
+    <div class="acknowledge-box">
+        <div class="ack-icon">✔</div>
+        <div>
+            <div class="ack-head">Acknowledgement Recorded</div>
+            <div class="ack-text">
+                By viewing this page, you confirm that you have received the latest version of the
+                Security & Data Handling Policy for Hogwarts Logistics Ltd.
+            </div>
+        </div>
+    </div>
+
+    <p class="small">
+        If you have any questions, please contact the HR Compliance team.
+    </p>
+
+</div>
+</body>
+</html>
+"""
+
+# Serves the logo used by the HTML page for realistic branding
+@app.route("/logo")
+def logo():
+    if not os.path.exists(LOGO_PATH):
+        return "Logo not found", 404
+    return send_file(LOGO_PATH, mimetype="image/png")
+
+# Main endpoint embedded in the phishing email
+# Logs client IP + User-Agent + timestamp, then renders the policy page normally
+@app.route("/policy-update")
+def policy_update():
+    ip = request.remote_addr
+    ua = request.headers.get("User-Agent", "-")
+    ts = datetime.utcnow().isoformat()
+
+    log_line = f"{ts} | IP={ip} | UA={ua}\n"
+    print(log_line.strip())
+
+    with open("policy_clicks.log", "a") as f:
+        f.write(log_line)
+
+    return render_template_string(POLICY_HTML)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
+~~~~
+
+---
 
 ### 5.3 Logged Result
 
@@ -186,7 +350,6 @@ A sample log entry from my tracking server:
 Victim IP: 89.xxx.xxx.xxx  
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)  
 Timestamp: 2025-12-04 09:52:31
-
 
 This confirmed that Hermione clicked the link and provided me with the necessary network fingerprint.
 
@@ -247,4 +410,3 @@ With all reconnaissance completed, I can now proceed to:
 
 - **Scenario 1 – Generic Brute Force (baseline)**  
 - **Scenario 2 – OSINT-Based Credential Guessing**
-
