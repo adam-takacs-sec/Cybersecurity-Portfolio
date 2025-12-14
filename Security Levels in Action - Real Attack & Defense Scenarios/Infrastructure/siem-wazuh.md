@@ -30,7 +30,7 @@ Scenario 1 (weak configuration, no SOC response).
   - Wazuh Dashboard
 ---
 
-## Why Wazuh SIEM?
+### Why Wazuh SIEM?
 
 Wazuh is used as the SIEM platform to provide centralized visibility into
 endpoint activity during the attack scenarios.
