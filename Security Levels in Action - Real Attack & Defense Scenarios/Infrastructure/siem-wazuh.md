@@ -28,6 +28,21 @@ Scenario 1 (weak configuration, no SOC response).
   - Wazuh Manager
   - Wazuh Indexer
   - Wazuh Dashboard
+---
+
+## Why Wazuh SIEM?
+
+Wazuh is used as the SIEM platform to provide centralized visibility into
+endpoint activity during the attack scenarios.
+
+Wazuh was chosen because it:
+- Is an open-source SIEM/XDR platform used in real-world environments
+- Supports Windows and Linux endpoint monitoring
+- Provides log collection, correlation, and alerting
+- Allows full control over detection and configuration
+
+This makes Wazuh suitable for demonstrating how endpoint activity
+is detected, analyzed, and responded to in a realistic SOC workflow.
 
 ---
 
