@@ -179,19 +179,37 @@ This information is crucial for validating the victim’s environment very early
 ### 5.2.1 Tracking Server Code (Policy Page + Logging)
 
 > This server does **not** deliver malware or exploits.  
-> Its sole purpose is early-stage validation and reconnaissance (IP + User-Agent + timestamp).
+> Its sole purpose is early-stage validation and reconnaissance (IP + User-Agent + timestamp) **inside this lab**.
 
 **File:** `policy_server.py`
+
+This component represents the attacker’s lightweight “infrastructure” used during the OSINT pre-stage:
+- It hosts a legitimate-looking internal policy acknowledgement page
+- It records **when** the link was opened and **what environment** opened it
+- It produces a small, timestamped log that can later be referenced during investigation and timeline correlation
+
+Key idea: the user sees a harmless policy page, while the attacker gains confirmation of interaction and basic fingerprinting.
 
 ~~~~python
 from flask import Flask, request, render_template_string, send_file
 from datetime import datetime
 import os
 
+# -----------------------------
+# 1) Static asset configuration
+# -----------------------------
+# The page includes a company logo to increase realism.
+# The logo is stored locally and served by a dedicated endpoint.
 LOGO_PATH = "/tmp/policy_static/hogwarts_orange.png"
 
 app = Flask(__name__)
 
+# -------------------------------------
+# 2) The "legitimate-looking" HTML page
+# -------------------------------------
+# This is the content displayed to the victim.
+# It is intentionally harmless: no credential prompts, no downloads, no scripts.
+# The acknowledgement is passive: the act of viewing the page is the "event."
 POLICY_HTML = """
 <!doctype html>
 <html lang="en">
@@ -314,15 +332,27 @@ POLICY_HTML = """
 </html>
 """
 
-# Serves the logo used by the HTML page for realistic branding
+# ---------------------------------
+# 3) Branding endpoint: /logo
+# ---------------------------------
+# The HTML references /logo. When the browser loads the page, it will also request
+# this endpoint, which serves the PNG file. This improves credibility of the page.
 @app.route("/logo")
 def logo():
     if not os.path.exists(LOGO_PATH):
         return "Logo not found", 404
     return send_file(LOGO_PATH, mimetype="image/png")
 
-# Main endpoint embedded in the phishing email
-# Logs client IP + User-Agent + timestamp, then renders the policy page normally
+# -----------------------------------------
+# 4) Main tracking endpoint: /policy-update
+# -----------------------------------------
+# This is the URL placed in the OSINT email.
+# When the user opens the link, the server captures:
+# - timestamp (UTC)  -> helps timeline correlation
+# - client IP        -> identifies the endpoint/network footprint
+# - User-Agent       -> indicates OS/browser/environment
+#
+# Then it writes a single-line record into policy_clicks.log and returns the HTML.
 @app.route("/policy-update")
 def policy_update():
     ip = request.remote_addr
@@ -335,26 +365,36 @@ def policy_update():
     with open("policy_clicks.log", "a") as f:
         f.write(log_line)
 
+    # The victim sees a normal policy page; the tracking is invisible to them.
     return render_template_string(POLICY_HTML)
 
+# -----------------------
+# 5) Server configuration
+# -----------------------
+# host=0.0.0.0 makes it reachable from other hosts (depending on network exposure)
+# port=8080 is the service port used during the lab.
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
 ~~~~
 
 ---
 
-### 5.3 Logged Result
+### 5.3 Logged Result (Lab Evidence)
 
-A sample log entry from my tracking server:
+After the user opened the OSINT email link, the tracking server recorded a request.
+This confirmed interaction and captured a basic environment fingerprint.
 
-Victim IP: 89.xxx.xxx.xxx  
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)  
-Timestamp: 2025-12-04 09:52:31
+**Windows Server (victim endpoint):**
 
-This confirmed that Hermione clicked the link and provided me with the necessary network fingerprint.
+Victim IP: **34.34.20.16**  
+User-Agent: **Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0**  
+Timestamp: **2025-12-04 11:23:21**
 
-**Screenshot:**  
-`/assets/osint/ip_capture_log.jpg`
+Example `policy_clicks.log` line:
+
+`2025-12-04T11:23:21Z | IP=34.34.20.16 | UA=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0`
+
+This confirmed that Hermione clicked the link and provided the necessary network fingerprint for the next stages.
 
 ---
 
