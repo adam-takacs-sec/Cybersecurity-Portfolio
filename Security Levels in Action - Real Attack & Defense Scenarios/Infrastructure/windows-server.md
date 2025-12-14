@@ -37,23 +37,6 @@ No server roles or enterprise services are installed.
 
 ---
 
-### Why Kali Linux on bare metal?
-Kali Linux is used as the attacker system and runs on bare metal due to:
-
-- No official Kali Linux images available in GCP
-- Running Kali inside UTM on Apple Silicon introduces:
-  - ARM compatibility limitations
-  - Network isolation issues
-  - Host firewall interference
-  - Reduced realism for attack tooling
-
-Bare metal deployment ensures:
-- Full tool compatibility
-- Stable networking
-- Realistic attacker behavior
-
----
-
 ## Installation
 - OS: Windows Server 2022
 - Deployment type: Cloud VM
