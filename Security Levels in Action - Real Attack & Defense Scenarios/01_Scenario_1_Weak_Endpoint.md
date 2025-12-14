@@ -291,6 +291,106 @@ Verification:
 
 ---
 
+### 📊 Audit Policy & Authentication Visibility Improvements
+
+After the initial compromise the organization identified a critical lack of authentication and activity visibility.
+Although logs technically existed, advanced audit telemetry was not enabled, preventing meaningful detection and correlation.
+
+To address this, **Advanced Audit Policy Configuration** was enabled and selectively hardened.
+
+---
+
+#### 🔐 Advanced Audit Policy Enforcement
+
+To ensure granular audit settings take precedence over legacy audit categories, the following policy was enabled:
+
+- **Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings**
+  - Status: **Enabled**
+
+This guarantees that all configured Advanced Audit subcategories are actively enforced by the system.
+
+---
+
+#### 🔑 Authentication & Logon Auditing
+
+The following audit categories were enabled to improve visibility into authentication activity, including brute-force attempts and successful remote access:
+
+- **Logon/Logoff → Audit Logon**
+  - Success
+  - Failure  
+  *(Generates Event IDs 4624 and 4625)*
+
+- **Logon/Logoff → Audit Logoff**
+  - Success
+
+- **Account Logon → Audit Credential Validation**
+  - Success
+  - Failure  
+  *(Provides additional context for authentication failures)*
+
+These changes allow failed and successful RDP logons to be clearly distinguished and correlated in the SIEM.
+
+---
+
+#### 👤 Account & Privilege Management Auditing
+
+To detect unauthorized account creation and privilege escalation, account management auditing was enabled:
+
+- **Account Management → Audit User Account Management**
+  - Success  
+  *(Generates Event IDs such as 4720 – user creation, and 4732 – user added to Administrators group)*
+
+This enables tracking of local account changes that may indicate persistence or privilege abuse.
+
+---
+
+#### ⚙️ Process & Command Execution Visibility
+
+To gain insight into post-compromise attacker activity, detailed process tracking was enabled:
+
+- **Detailed Tracking → Audit Process Creation**
+  - Success  
+  *(Generates Event ID 4688)*
+
+This allows basic reconnaissance commands and tooling execution to be visible and correlated with user sessions.
+
+---
+
+#### 🗓️ Scheduled Task & Object Activity Auditing
+
+To improve visibility into potential persistence mechanisms, object access auditing was partially enabled:
+
+- **Object Access → Audit Other Object Access Events**
+  - Success  
+  *(Enables detection of scheduled task creation, Event ID 4698)*
+
+---
+
+#### 📡 SIEM Integration Validation
+
+After applying these changes, failed and successful logon events were confirmed to be:
+
+- Visible in **Windows Security Event Logs**
+- Successfully forwarded by the **Wazuh agent**
+- Ingested and searchable in the **Wazuh SIEM**
+
+This confirms that authentication and account activity telemetry is now available for detection and investigation.
+
+---
+
+#### ⚠️ Security Maturity Gap
+
+Although logging and visibility were significantly improved, **no alerting rules or SOC response processes were introduced at this stage**.
+
+As a result:
+- Malicious activity is now visible
+- SIEM telemetry is rich and reliable
+- **But attacker behavior can still proceed without interruption**
+
+This gap directly leads into **Scenario 2**, where the attacker successfully compromises the system again despite improved logging, due to the absence of active SOC response.
+
+---
+
 ## 🧠 Scenario 1 — Final Outcome
 
 This scenario demonstrates:
@@ -301,4 +401,4 @@ This scenario demonstrates:
 - Why visibility alone is not enough without detection logic
 
 Scenario 1 establishes the baseline failure state  
-and motivates the security improvements introduced in Scenario 2.
+and motivates the security improvements.
