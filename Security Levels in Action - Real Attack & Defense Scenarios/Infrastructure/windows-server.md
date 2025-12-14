@@ -1,10 +1,16 @@
-# Windows Server – Target System
+# Windows Server – Target Endpoint System
 
 ## Purpose
-Primary attack target system used in Scenario 1.
-This machine represents a poorly secured server exposed to the internet,
-intentionally configured with weak authentication controls to allow successful
-attack execution and observable SIEM telemetry.
+This system represents the **primary attacked endpoint** in the scenario.
+
+Although Windows Server is used as the operating system, this machine
+**does not function as an infrastructure server**.
+It represents a **user workstation exposed directly to the internet**,
+intentionally deployed with weak security controls to demonstrate
+realistic endpoint compromise and SIEM telemetry generation.
+
+The operating system choice is driven by **cloud platform constraints**,
+not by architectural intent.
 
 ---
 
@@ -18,80 +24,116 @@ attack execution and observable SIEM telemetry.
 
 ---
 
+## Operating System Choice Rationale
+
+### Why Windows Server instead of Windows 10?
+Google Cloud Platform does not provide native Windows 10 images and deploying
+Windows 10 in GCP requires complex workarounds and licensing overhead.
+
+Windows Server is therefore used as a **technical substitute** for a Windows
+endpoint, while being treated **purely as a user machine**, not as a server.
+
+No server roles or enterprise services are installed.
+
+---
+
+### Why Kali Linux on bare metal?
+Kali Linux is used as the attacker system and runs on bare metal due to:
+
+- No official Kali Linux images available in GCP
+- Running Kali inside UTM on Apple Silicon introduces:
+  - ARM compatibility limitations
+  - Network isolation issues
+  - Host firewall interference
+  - Reduced realism for attack tooling
+
+Bare metal deployment ensures:
+- Full tool compatibility
+- Stable networking
+- Realistic attacker behavior
+
+---
+
 ## Installation
 - OS: Windows Server 2022
 - Deployment type: Cloud VM
+- Usage model: **Standalone endpoint**
 - Initial access method: RDP (publicly accessible)
 
-No additional roles or features were installed.
-System remains in a default, “vanilla” state.
+No additional Windows roles or features were installed.
+The system remains in a default, “vanilla” state.
+
+---
+
+## User Accounts
+
+The system simulates a real user environment.
+
+- Local Administrator account:
+  - Used only for system setup
+  - Not used during the attack
+- Standard user account:
+  - Represents the victim employee
+  - Primary attack target
+  - Used for interactive logons
+
+Attacks are performed **against the standard user context**, not directly
+against the administrator account.
 
 ---
 
 ## Network Access
-- RDP (3389/TCP) – remote management and attack surface
+- RDP (3389/TCP) – user access and attack surface
 - Wazuh Agent communication:
   - 1514/TCP
   - 1515/TCP
 
-No network hardening or IP restrictions applied (Scenario 1 scope).
+No IP filtering or network hardening applied.
 
 ---
 
 ## Firewall Configuration (GCP)
-The following ingress firewall rules were created to support monitoring:
 
-- TCP 3389 – RDP access
+Ingress rules (intentionally permissive):
+
+- TCP 3389 – RDP
 - TCP 1514 – Wazuh agent data channel
 - TCP 1515 – Wazuh agent enrollment
 
 Source range: `0.0.0.0/0`  
-Target: Windows Server VM  
+Target: Windows endpoint VM
 
-This intentionally permissive configuration supports Scenario 1
-(weak network exposure).
+This configuration reflects a weak perimeter posture.
 
 ---
 
 ## Wazuh Agent Integration
-The Windows Server is enrolled as a Wazuh agent to provide basic visibility.
+The endpoint is enrolled as a Wazuh agent to provide baseline visibility.
 
-- Agent installed using official Wazuh Windows installer
-- Enrollment performed against Wazuh SIEM internal IP
-- Default agent configuration used
+- Official Wazuh Windows agent installed
+- Enrollment against Wazuh SIEM internal IP
+- Default configuration used
 - No additional log sources enabled
 
-Successful enrollment confirms connectivity and telemetry flow.
-
----
-
-## Authentication Configuration (Scenario 1)
-Authentication controls are intentionally weak and minimally configured.
-
-- Password complexity: Enabled
-- Minimum password length: Low (default)
-- Account lockout policy: Ineffective / not enforced
-- RDP exposed publicly
-- Default administrative account in use
-
-This configuration reflects a common real-world weak baseline.
-
----
-
-## Post-install Verification
-The following checks were performed:
-
-- Successful RDP access
-- Wazuh agent connected and reporting
-- Basic Windows Security Event Logs generated
-- No additional hardening applied
-
----
-
-## Screenshots
+Telemetry flow verified.
 
 ### Wazuh Agent Active (Dashboard)
 ![Windows Server Desktop](../../Assets/Infrastructure/windows-server/wazuh-dashboard.png)
+
+---
+
+## Authentication Configuration (Baseline)
+
+Authentication controls are intentionally weak.
+
+- Password complexity: Enabled (default)
+- Minimum password length: Low
+- Account lockout policy: Ineffective
+- RDP exposed publicly
+- No MFA
+- No credential hardening
+
+This reflects a common real-world misconfiguration.
 
 ### Password Policy
 ![Password Policy](../../Assets/Infrastructure/windows-server/password-policy.png)
@@ -101,30 +143,41 @@ The following checks were performed:
 
 ---
 
-## Configuration Scope (Scenario 1)
-The following configurations were intentionally **not applied**:
+## Post-install Verification
 
-- No Sysmon
-- No advanced audit policies
-- No PowerShell logging
-- No credential hardening
-- No endpoint protection tuning
-
-This allows the attack to succeed while still generating basic security telemetry.
+- Successful RDP login as standard user
+- Wazuh agent connected and reporting
+- Windows Security Event Logs generated
+- No additional security hardening
 
 ---
 
-## Security Posture
-- Weak authentication posture
-- Publicly exposed management interface
+## Configuration Scope
+
+The following controls are intentionally **not enabled**:
+
+- Sysmon
+- Advanced audit policies
+- PowerShell logging
+- Credential Guard
+- Endpoint protection tuning
+
+This allows successful compromise while still producing basic telemetry.
+
+---
+
+## Security Posture Summary
+
+- Publicly exposed endpoint
+- Weak authentication
 - Minimal logging
 - No active defense mechanisms
 
 This system is intentionally vulnerable to demonstrate
-how weak configuration leads to compromise.
+how endpoint misconfiguration leads to compromise.
 
 ---
 
 ## Status
-Windows Server target system is operational and ready for
-Scenario 1 attack execution and SIEM-based analysis.
+Windows endpoint system is operational and ready for
+attack execution and SIEM-based analysis.
