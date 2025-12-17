@@ -1,13 +1,13 @@
-# 🟥 Scenario 1 — Weak Endpoint
-**Attacker gains access due to weak credentials and ineffective security visibility**
+# 🟥 Scenario 1 — Weak Endpoint  
+**I gained access due to weak credentials and ineffective security visibility**
 
 ---
 
 ## 🟦 Environment Overview — Initial State
 
-Before the attack begins, the Windows Server endpoint is intentionally left in a weak, low-maturity security state.
+Before I began the attack, the Windows Server endpoint was intentionally left in a weak, low-maturity security state.
 
-Although the operating system is **Windows Server 2022**, it is treated purely as an **endpoint / workstation**, not as a hardened enterprise server.
+Although the operating system is **Windows Server 2022**, I treated it purely as an **endpoint / workstation**, not as a hardened enterprise server.
 
 This setup represents a **small logistics company** with limited security maturity, no SOC team, and no active detection or response processes.
 
@@ -15,7 +15,7 @@ This setup represents a **small logistics company** with limited security maturi
 
 ## 🔐 Password & Account Security — Initial State
 
-The endpoint uses a **severely misconfigured password and account policy**.
+The endpoint used a **severely misconfigured password and account policy**.
 
 Current configuration:
 - Password complexity: Enabled
@@ -26,16 +26,16 @@ Current configuration:
 - Lockout observation window: 0
 
 Impact:
-- Weak and predictable passwords are allowed
-- Unlimited authentication attempts are possible
-- Password spraying and brute-force attacks are feasible without interruption
-- No user-side or system-side deterrence exists
+- Weak and predictable passwords were allowed
+- Unlimited authentication attempts were possible
+- Password spraying and brute-force attacks were feasible without interruption
+- No user-side or system-side deterrence existed
 
 ---
 
 ## 🌐 Network Exposure
 
-The Windows endpoint is **directly exposed to the internet**.
+The Windows endpoint was **directly exposed to the internet**.
 
 Externally observed services:
 
@@ -48,11 +48,11 @@ Externally observed services:
 | 22/tcp | SSH | Closed | Not exposed |
 
 Risk summary:
-- RDP is publicly reachable
-- No MFA
-- No IP allowlisting
-- No rate limiting
-- No brute-force protection
+- RDP was publicly reachable
+- No MFA was enforced
+- No IP allowlisting was configured
+- No rate limiting was in place
+- No brute-force protection existed
 
 ![Nmap scan](/Assets/Scenario_1/Nmap.png)
 
@@ -60,7 +60,7 @@ Risk summary:
 
 ## 📊 Logging & Visibility — Initial State
 
-Windows auditing is **minimally configured**.
+Windows auditing was **minimally configured**.
 
 Audit coverage:
 - Logon auditing: Partially enabled
@@ -70,30 +70,30 @@ Audit coverage:
 - File system auditing: Disabled
 
 Resulting visibility:
-- Authentication events lack context
-- Failed and successful logons blend together
-- Attacker activity is indistinguishable from background noise
-- No reliable detection capability exists
+- Authentication events lacked context
+- Failed and successful logons blended together
+- My activity was indistinguishable from background noise
+- No reliable detection capability existed
 
 ---
 
 ## 👁️ Sysmon — Initial State
 
-Sysmon is **not installed**.
+Sysmon was **not installed**.
 
 Without Sysmon:
-- No process creation telemetry
-- No network connection visibility
-- No file creation or modification events
-- No registry activity monitoring
+- No process creation telemetry existed
+- No network connection visibility was available
+- No file creation or modification events were logged
+- No registry activity monitoring was present
 
-Large portions of attacker behavior are completely invisible.
+Large portions of my activity were completely invisible.
 
 ---
 
 ## 📡 Wazuh Agent — Initial State
 
-The Wazuh agent is installed but **poorly configured**.
+The Wazuh agent was installed but **poorly configured**.
 
 Observed state:
 - Limited Windows Security Event forwarding
@@ -103,9 +103,9 @@ Observed state:
 - No alerting logic
 
 From a SOC perspective:
-- Logs technically exist
-- No actionable signal is produced
-- No alerts are generated
+- Logs technically existed
+- No actionable signal was produced
+- No alerts were generated
 
 ---
 
@@ -115,14 +115,14 @@ From a SOC perspective:
 
 ## 1️⃣ Step 1 — Reconnaissance
 
-The attacker performs basic network reconnaissance to identify exposed services.
+I performed basic network reconnaissance to identify exposed services.
 
-Action:
-- Port scanning from the attacker system
+Actions:
+- Port scanning from my attacker system
 - Focus on common remote access services
 
 Observed result:
-- RDP is exposed and reachable from the internet
+- RDP was exposed and reachable from the internet
 
 ![Nmap scan](/Assets/Scenario_1/Nmap.png)
 
@@ -130,7 +130,7 @@ Observed result:
 
 ## 2️⃣ Step 2 — Username Enumeration
 
-A basic username list is prepared using common enterprise naming patterns.
+I prepared a basic username list using common enterprise naming patterns.
 
 Usernames tested:  
 administrator  
@@ -139,7 +139,7 @@ user
 employee  
 employee1  
 
-This reflects a realistic attacker assumption phase.
+This reflects a realistic early-stage attacker assumption phase.
 
 ![Users list](/Assets/Scenario_1/Users.png)
 
@@ -147,7 +147,7 @@ This reflects a realistic attacker assumption phase.
 
 ## 3️⃣ Step 3 — Password Spraying
 
-A simple password list is created using extremely common credentials.
+I created a simple password list using extremely common credentials.
 
 Passwords tested:  
 Welcome1  
@@ -160,11 +160,11 @@ Password1
 
 Attack method:
 - Password spraying via RDP
-- No lockout policy triggered
-- No defensive response observed
+- No lockout policy was triggered
+- No defensive response was observed
 
 Result:
-- Valid credentials discovered
+- Valid credentials were discovered
 
 Discovered credentials:
 - Username: employee1
@@ -176,19 +176,19 @@ Discovered credentials:
 
 ## 4️⃣ Step 4 — RDP Login
 
-The attacker authenticates successfully using the discovered credentials.
+I authenticated successfully using the discovered credentials.
 
 Result:
-- User-level access obtained
-- No security warnings
-- No account lockout
-- No alerting
+- User-level access was obtained
+- No security warnings appeared
+- No account lockout occurred
+- No alerting was triggered
 
 ---
 
 ## 5️⃣ Step 5 — Post-Compromise Reconnaissance
 
-After access is obtained, the attacker performs basic reconnaissance.
+After gaining access, I performed basic reconnaissance.
 
 Activities:
 - Identity confirmation
@@ -197,9 +197,9 @@ Activities:
 - Local user enumeration
 
 Outcome:
-- System ownership confirmed
-- Local environment mapped
-- No detection triggered
+- System ownership was confirmed
+- The local environment was mapped
+- No detection was triggered
 
 ![RDP login and reconnaissance](/Assets/Scenario_1/xfreerdp3-login+reconnaisence.png)
 
@@ -207,16 +207,16 @@ Outcome:
 
 ## 6️⃣ Step 6 — Simulated Ransomware Impact
 
-To demonstrate business impact **without deploying real malware**, a simulated ransomware action is performed.
+To demonstrate business impact **without deploying real malware**, I performed a simulated ransomware action.
 
-Action:
-- Files are renamed to simulate encryption
-- A fake ransom note is placed on the desktop
-- Cryptocurrency payment is demanded
+Actions:
+- Files were renamed to simulate encryption
+- A fake ransom note was placed on the desktop
+- Cryptocurrency payment was demanded
 
-Important:
-- No real malware is used
-- No encryption occurs
+Important notes:
+- No real malware was used
+- No encryption occurred
 - This step exists solely to demonstrate **impact and disruption**
 
 ![Fake ransomware and left behind message](/Assets/Scenario_1/Ransomware+left_behind_message.png)
@@ -225,29 +225,28 @@ Important:
 
 ## 7️⃣ Step 7 — Attacker Exit
 
-The attacker exits the environment cleanly.
+I exited the environment cleanly.
 
-Action:
+Actions:
 - Normal logout
-- No cleanup required
+- No cleanup performed
 - No traces intentionally removed
 
 ---
 
 ## 🟨 SIEM Visibility During the Attack
 
-Initial SIEM review suggested **no meaningful visibility**.
+My initial SIEM review suggested **no meaningful visibility**.
 
 After correcting the time window to match the attack period:
-- Approximately 1 hour of activity
-- 1,387 events ingested
-- Mostly authentication noise
-- No alerts triggered
-- No prioritization
-- No correlation
+- Approximately 1 hour of activity was visible
+- 1,387 events were ingested
+- Most events were authentication noise
+- No alerts were triggered
+- No prioritization or correlation occurred
 
 Key takeaway:
-High log volume without filtering causes **malicious activity to disappear in noise**.
+High log volume without filtering caused **malicious activity to disappear in noise**.
 
 ![Noisy Wazuh dashboard](/Assets/Scenario_1/Noisy_wazuh.png)
 
@@ -255,7 +254,7 @@ High log volume without filtering causes **malicious activity to disappear in no
 
 ## 🟩 Post-Incident Improvements
 
-After the incident, **partial security hardening** is applied.
+After completing the attack, I applied **partial security hardening**.
 
 ---
 
@@ -267,7 +266,7 @@ Changes applied:
 - Maximum password age configured to 90 days
 
 Unchanged:
-- Account lockout policy remains disabled
+- Account lockout policy remained disabled
 
 This represents an **incomplete but realistic** improvement step.
 
@@ -277,7 +276,7 @@ This represents an **incomplete but realistic** improvement step.
 
 ### 👁️ Sysmon Deployment
 
-Sysmon is installed using the **SwiftOnSecurity** configuration.
+I installed Sysmon using the **SwiftOnSecurity** configuration.
 
 Purpose:
 - Improve process visibility
@@ -293,27 +292,27 @@ Verification:
 
 ### 📊 Audit Policy & Authentication Visibility Improvements
 
-After the initial compromise the organization identified a critical lack of authentication and activity visibility.
+After the initial compromise, I identified a critical lack of authentication and activity visibility.  
 Although logs technically existed, advanced audit telemetry was not enabled, preventing meaningful detection and correlation.
 
-To address this, **Advanced Audit Policy Configuration** was enabled and selectively hardened.
+To address this, I enabled and hardened **Advanced Audit Policy Configuration**.
 
 ---
 
 #### 🔐 Advanced Audit Policy Enforcement
 
-To ensure granular audit settings take precedence over legacy audit categories, the following policy was enabled:
+I enabled the following policy to ensure granular audit settings take precedence over legacy categories:
 
 - **Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings**
   - Status: **Enabled**
 
-This guarantees that all configured Advanced Audit subcategories are actively enforced by the system.
+This ensured that all configured Advanced Audit subcategories were actively enforced.
 
 ---
 
 #### 🔑 Authentication & Logon Auditing
 
-The following audit categories were enabled to improve visibility into authentication activity, including brute-force attempts and successful remote access:
+I enabled the following audit categories to improve visibility into authentication activity:
 
 - **Logon/Logoff → Audit Logon**
   - Success
@@ -334,11 +333,11 @@ These changes allow failed and successful RDP logons to be clearly distinguished
 
 #### 👤 Account & Privilege Management Auditing
 
-To detect unauthorized account creation and privilege escalation, account management auditing was enabled:
+To detect unauthorized account creation and privilege escalation, I enabled:
 
 - **Account Management → Audit User Account Management**
   - Success  
-  *(Generates Event IDs such as 4720 – user creation, and 4732 – user added to Administrators group)*
+  *(Generates Event IDs such as 4720 and 4732)*
 
 This enables tracking of local account changes that may indicate persistence or privilege abuse.
 
@@ -346,19 +345,19 @@ This enables tracking of local account changes that may indicate persistence or 
 
 #### ⚙️ Process & Command Execution Visibility
 
-To gain insight into post-compromise attacker activity, detailed process tracking was enabled:
+To gain insight into post-compromise activity, I enabled:
 
 - **Detailed Tracking → Audit Process Creation**
   - Success  
   *(Generates Event ID 4688)*
 
-This allows basic reconnaissance commands and tooling execution to be visible and correlated with user sessions.
+This allows reconnaissance commands and tooling execution to be visible and correlated with user sessions.
 
 ---
 
 #### 🗓️ Scheduled Task & Object Activity Auditing
 
-To improve visibility into potential persistence mechanisms, object access auditing was partially enabled:
+To improve visibility into potential persistence mechanisms, I partially enabled:
 
 - **Object Access → Audit Other Object Access Events**
   - Success  
@@ -368,37 +367,35 @@ To improve visibility into potential persistence mechanisms, object access audit
 
 #### 📡 SIEM Integration Validation
 
-After applying these changes, failed and successful logon events were confirmed to be:
+After applying these changes, I confirmed that failed and successful logon events were:
+- Visible in Windows Security Event Logs
+- Successfully forwarded by the Wazuh agent
+- Ingested and searchable in the Wazuh SIEM
 
-- Visible in **Windows Security Event Logs**
-- Successfully forwarded by the **Wazuh agent**
-- Ingested and searchable in the **Wazuh SIEM**
-
-This confirms that authentication and account activity telemetry is now available for detection and investigation.
+This confirmed that authentication and account activity telemetry was now available.
 
 ---
 
 #### ⚠️ Security Maturity Gap
 
-Although logging and visibility were significantly improved, **no alerting rules or SOC response processes were introduced at this stage**.
+Although logging and visibility were significantly improved, **I did not introduce alerting rules or SOC response processes at this stage**.
 
 As a result:
-- Malicious activity is now visible
-- SIEM telemetry is rich and reliable
-- **But attacker behavior can still proceed without interruption**
+- Malicious activity became visible
+- SIEM telemetry was rich and reliable
+- **But my activity could still proceed without interruption**
 
-This gap directly leads into **Scenario 2**, where the attacker successfully compromises the system again despite improved logging, due to the absence of active SOC response.
+This gap directly leads into **Scenario 2**, where I successfully compromise the system again despite improved logging, due to the absence of active SOC response.
 
 ---
 
 ## 🧠 Scenario 1 — Final Outcome
 
 This scenario demonstrates:
-
 - How a single exposed service can compromise an endpoint
 - How weak credentials negate perimeter security
 - How logging without structure creates blind spots
 - Why visibility alone is not enough without detection logic
 
 Scenario 1 establishes the baseline failure state  
-and motivates the security improvements.
+and motivates the security improvements that follow.
