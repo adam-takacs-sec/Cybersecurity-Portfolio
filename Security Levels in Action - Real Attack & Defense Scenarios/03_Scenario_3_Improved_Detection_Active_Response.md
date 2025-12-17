@@ -1,297 +1,228 @@
-# 🟨 Scenario 3 — Backdoor Reuse, SOC Detection, Attacker Blocked  
-### *Attacker returns through the hidden persistence placed in Scenario 2 — but this time, the SOC reacts and stops the breach.*
-
-In this scenario:
-
-- The attacker reuses the **backdoor account** created in Scenario 2  
-- The company's SIEM is now well-tuned and has a **custom dashboard**  
-- Analysts finally know what suspicious activity looks like  
-- The intrusion is detected early  
-- SOC reacts: **blocks IP**, **removes user**, **kills sessions**, **deletes persistence**  
-- Attacker attempts fallback entry methods — **all fail**
-
-This scenario demonstrates a huge defensive skill improvement.
+# 🟥 Scenario 3 — Detection & Response in Action
+**Attacker returns — SOC detects, contains, and stops the intrusion**
 
 ---
 
-# 🟦 1. Environment Overview (After Scenario 2 Improvements)
+## 🧭 Scenario Context
 
-The company has improved significantly since Scenario 2:
+Scenario 3 follows directly after Scenario 2.
 
-## ✔ Better SIEM Tuning  
-- Custom dashboard  
-- MITRE-tagged alerts  
-- Priority alerts for:
-  - New admin users  
-  - Scheduled task creation  
-  - Firewall modification  
-  - PowerShell ScriptBlock abuse  
-  - RDP logons from unknown IPs  
-  - Log clearing attempts
+Because the previous incident was not properly handled, the attacker retained valid credentials and decided to return.  
+However, since Scenario 2, the organization introduced **active detection and response capabilities** in the SIEM.
 
-## ✔ SOC Analyst Now Actively Monitors Alerts  
-- Starting shift dashboard review  
-- Analysts respond within minutes, not hours  
-- They know what the attacker did previously (Scenario 2 artifacts)
-
-## ❌ But Some Technical Weaknesses Still Exist  
-- RDP is still enabled  
-- No MFA  
-- No IP allowlist  
-- Firewall rules not fully hardened  
-
-This makes the environment **detectable but not yet impenetrable**.
+This scenario demonstrates a realistic blue team success case:
+> **The attacker gains access — but is quickly detected, contained, and forced to disengage.**
 
 ---
 
-# 🟠 2. Before Starting Scenario 3
+## 🟦 1. Environment Overview — Defensive State
 
-### ✔ Snapshot Windows Server  
-Name: `scenario3_start_windows`
+The Windows Server endpoint remains externally accessible, but detection maturity has significantly improved.
 
-### ✔ Snapshot Kali Linux  
-Name: `scenario3_start_kali`
+### 🔐 Account & Authentication State
 
-### ✔ Confirm the persistence from Scenario 2 exists
-Inside Windows (for your verification only):
-
-```powershell
-net user backupadmin
-schtasks /query | findstr SystemBackupTask
-netsh advfirewall firewall show rule name="Backup WinRM"
-```
-
-You will not fix anything — this is the SOC’s job later.
+- Password complexity: **Enabled**
+- Minimum password length: **10**
+- Password history: **5**
+- Maximum password age: **90 days**
+- Account lockout policy: **Configured**
+- Compromised account: **Still valid at scenario start**
 
 ---
 
-# 🟧 3. Initial Access — Reusing the Backdoor Admin
+## 📊 2. Logging & Detection Capabilities
 
-The attacker returns days/weeks later and attempts logging in using the backdoor user:
+### ✔ Active Telemetry
 
-```bash
-xfreerdp /v:<WINDOWS_IP> /u:backupadmin /p:Winter2024! /cert:ignore
-```
+- Windows Security Event Logs
+  - Successful logons (4624)
+  - Failed logons (4625)
+- NTLM authentication visibility
+- Sysmon process creation events
+- PowerShell execution visibility (process-level)
 
-### Expected:
-- Login success (LogonType 10 - RDP)
-- SIEM immediately alerts:
-  - **4624** admin login  
-  - **New/unused account login**  
-  - **Source IP never seen before**  
-  - **High-risk account authentication**
+### ⚠ Known Limitation
 
-**Screenshot:**  
-➡️ Windows desktop after login  
-➡️ SIEM → RDP admin login alert firing immediately
+- PowerShell command content is **not logged**
+- Script Block Logging (Event ID 4104) not enabled
+
+This reflects a **realistic partial visibility state**.
 
 ---
 
-# 🟦 4. SOC Detection — Real-Time Response Begins
+## 🟧 3. Attacker Re-Entry — Successful Authentication
 
-Within **1–3 minutes**, the SOC analyst sees:
+Using previously compromised credentials, the attacker authenticated via RDP.
 
-### 🔥 Critical alerts:
-- Login from unknown external IP  
-- Privileged account used (4720/4732 history visible)  
-- Previously unused user logging in  
-- PowerShell events (ScriptBlock 4104)  
-- Sysmon Process Creation (ID 1)
+### Evidence
 
-### 🕵️ Analyst flags session as suspicious  
-They escalate the incident → start containment steps.
+- Successful logon observed
+- External attacker IP clearly visible
+- Authentication alert elevated by correlation logic
 
----
-
-# 🟥 5. On-System Attacker Actions (Attempted but Detected Quickly)
-
-The attacker tries to repeat initial recon:
-
-```powershell
-whoami
-hostname
-ipconfig /all
-Get-LocalUser
-```
-
-SIEM immediately lists:
-
-- Sysmon ID 1 (powershell.exe)  
-- ScriptBlock 4104  
-- RDP session metadata  
-- Suspicious user behavior (“backupadmin” accessing server resources)
-
-**Screenshot:**  
-➡️ SIEM showing real-time process creation logs
+📸 Screenshot:
+- Wazuh Discover — Successful logon (original attacker IP)  
+  `s3_discover_successful_logon_original_ip.png`
 
 ---
 
-# 🟪 6. SOC Blocks the Intrusion
+## 🟥 4. Post-Login Activity — Initial Reconnaissance
 
-## 6.1 Analyst Forces Session Termination
+After gaining access, the attacker performed standard initial reconnaissance.
 
-The SOC manually kills the RDP session:
+### Actions Performed
 
-```powershell
-logoff <session_ID>
-```
+- Identity checks:
+  - `whoami`
+  - `hostname`
+- System and environment enumeration:
+  - `systeminfo`
+  - `ipconfig /all`
+  - `Get-LocalUser`
 
-OR through Task Manager.
+### Detection
 
-The attacker sees:
+- PowerShell process execution detected
+- Process creation events generated (Event ID 4688)
 
-❌ **RDP session abruptly closed**
-
----
-
-## 6.2 SOC Disables the Backdoor Account
-
-```powershell
-net user backupadmin /active:no
-```
-
-## 6.3 SOC Removes the Backdoor User Entirely
-
-```powershell
-net user backupadmin /delete
-```
-
-SIEM logs:
-- 4726 — User account deleted  
-- 4733 — User removed from Admin group
+⚠ Due to missing script block logging, exact command content was not available.
 
 ---
 
-## 6.4 SOC Deletes the Attacker’s Scheduled Task
+## 🟦 5. SOC Detection & Initial Assessment
 
-```powershell
-schtasks /delete /tn "SystemBackupTask" /f
-```
+The SOC identified a suspicious pattern:
 
-SIEM logs:
-- 4699 — Scheduled task deleted
+- Successful authentication from an external IP
+- Immediate PowerShell-based reconnaissance
+- Indicators consistent with early-stage attacker activity
 
----
-
-## 6.5 SOC Removes Firewall Backdoor Rule
-
-```powershell
-netsh advfirewall firewall delete rule name="Backup WinRM"
-```
-
-SIEM logs:
-- Firewall rule modification
+The incident was escalated for response.
 
 ---
 
-## 6.6 SOC Blocks Attacker IP at Firewall Level
+## 🟥 6. SOC Response — Session Termination
 
-Edge firewall / Cloud firewall:
+As an immediate containment action, the SOC:
 
-```bash
-block <ATTACKER_PUBLIC_IP>
-```
+- Identified the active RDP session
+- Terminated the session using a logoff action
 
-Attacker loses ability to reconnect.
+### Result
 
----
-
-# 🟥 7. Attacker Attempts Fallback Methods (All Fail)
-
-After being kicked out, the attacker tries different approaches:
+- Interactive attacker access was interrupted
+- No persistence mechanisms were established
 
 ---
 
-## 7.1 Attempt RDP Login Again
+## 🟥 7. SOC Containment — IP-Based Blocking
 
-```bash
-xfreerdp /v:<WINDOWS_IP> /u:backupadmin /p:Winter2024!
-```
+To prevent re-entry, the SOC applied:
 
-**Expected:**  
-❌ Account disabled or deleted
+- IP-based blocking against the attacker’s original source address
 
----
+### Result
 
-## 7.2 Attempt Using Original OSINT Password of Scenario 2 User
-
-```bash
-xfreerdp /v:<WINDOWS_IP> /u:<OLD_USER> /p:<OSINT_PASSWORD>
-```
-
-**Expected:**  
-❌ Password changed after SOC containment
+- RDP connections from the original IP were denied
+- No additional successful logons occurred from that address
 
 ---
 
-## 7.3 Attempt WinRM Backdoor Port (5987)
+## 🟧 8. Attacker Evasion Attempt — IP Change
 
-```bash
-evil-winrm -i <WINDOWS_IP> -u backupadmin -p Winter2024! -P 5987
-```
+The attacker attempted to bypass containment by:
 
-**Expected:**  
-❌ Port closed  
-❌ User removed  
-❌ Connection refused
+- Changing external IP address (VPN-based evasion)
+- Retrying RDP authentication using the same username
 
----
+### Result
 
-## 7.4 Attempt SMB / Lateral Entry
+- Authentication failed
+- Credential had already been reset by the SOC
 
-```bash
-smbclient -L //<WINDOWS_IP> -U backupadmin
-```
-
-**Expected:**  
-❌ Authentication failure  
-❌ IP blocked upstream
+📸 Screenshot:
+- Wazuh Discover — Failed logon from new attacker IP  
+  `s3_discover_failed_logon_new_ip.png`
 
 ---
 
-# 🚫 Attacker cannot regain access.  
-This is the first scenario where defense **beats** offense.
+## 🔁 9. Post-Containment Activity
+
+After containment:
+
+- Additional failed authentication attempts were observed
+- No successful logons occurred
+- Attacker activity gradually stopped
+
+This behavior indicates **opportunistic retry attempts**, not active compromise.
 
 ---
 
-# 🟩 8. SOC Post-Incident Hardening
+## 📊 10. Wazuh Dashboard — Incident Overview
 
-After containment, the SOC applies:
+The Wazuh dashboard provides a consolidated view of the entire incident lifecycle.
 
-- Disable RDP exposure  
-- Enforce MFA  
-- Add IP allowlisting  
-- Enable account lockout policy  
-- Create SIEM rules for:
-  - User creation  
-  - Admin group changes  
-  - Firewall modifications  
-  - Scheduled tasks  
-  - RDP brute-force detection  
-- Add playbooks for:
-  - Privileged account misuse  
-  - Lateral movement investigation  
-  - PowerShell detection  
+### What the Dashboard Shows
 
-This prepares the environment for **Scenario 4**, where the attacker fails before even entering.
+- Transition from successful authentication to containment
+- Elevation of alert severity during attacker activity
+- Clear disappearance of successful logons after SOC action
+- Persistence of failed logons only
+
+📸 Screenshots:
+- Wazuh Dashboard — Incident overview (part 1)  
+  `s3_dashboard_overview_part1.png`
+- Wazuh Dashboard — Incident overview (part 2)  
+  `s3_dashboard_overview_part2.png`
+
+These views confirm that **SOC response directly altered the attack outcome**.
 
 ---
 
-# 🟦 9. Lessons Learned
+## 🧠 11. SOC Outcome & Lessons Learned
 
-### ✔ SOC reaction time is crucial  
-### ✔ Persistence must always be checked after compromise  
-### ✔ Every new admin user must trigger an alert  
-### ✔ Firewall rule changes must be monitored  
-### ✔ Credential-based attacks must be reviewed over time  
-### ✔ External IP anomaly detection is essential  
+### What Worked
 
-The company is now **much stronger** than in Scenarios 1–2.
+- Timely detection of suspicious authentication
+- Correlation-based alerting
+- Rapid session termination
+- Effective IP-based containment
+- Credential reset prevented re-entry
+
+### Remaining Gaps
+
+- Lack of PowerShell command-level visibility
+- Script Block Logging not enabled during the incident
 
 ---
 
-# ✔ End of Scenario 3  
-**Create snapshots:**
+## 🟩 12. Scenario 3 Outcome
 
-- Windows → `scenario3_end_windows`  
+- Initial access: **Yes**
+- Lateral movement: **No**
+- Privilege escalation: **No**
+- Persistence: **No**
+- Data access/exfiltration: **No**
+
+✅ **The attacker was detected early and successfully stopped.**
+
+---
+
+## 🔒 13. Lead-In to Hardening Phase
+
+Following this incident, the organization proceeds with:
+
+- Enhanced PowerShell logging
+- Stricter authentication controls
+- Reduced attack surface
+- Mature SOC workflows
+
+This marks the transition from **reactive detection** to **proactive defense**.
+
+---
+
+# ✔ End of Scenario 3
+
+**Snapshots:**
+- Windows → `scenario3_end_windows`
 - Kali → `scenario3_end_kali`
