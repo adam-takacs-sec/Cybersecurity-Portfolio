@@ -62,7 +62,7 @@ Using previously compromised credentials, the attacker authenticated via RDP.
 
 📸 Screenshot:
 - Wazuh Discover — Successful logon (original attacker IP)  
-  `s3_discover_successful_logon_original_ip.png`
+  ![Original IP](/Assets/Scenario_3/original_ip.png)
 
 ---
 
@@ -126,6 +126,13 @@ To prevent re-entry, the SOC applied:
 - RDP connections from the original IP were denied
 - No additional successful logons occurred from that address
 
+📸 Screenshot:
+- IP block on port 3389 (RDP)
+  ![IP Block port](/Assets/Scenario_3/ip_block_port.png)
+
+- IP block by IP (178.164.153.115)
+  ![IP Block IP](/Assets/Scenario_3/ip_block_ip.png)
+
 ---
 
 ## 🟧 8. Attacker Evasion Attempt — IP Change
@@ -141,8 +148,8 @@ The attacker attempted to bypass containment by:
 - Credential had already been reset by the SOC
 
 📸 Screenshot:
-- Wazuh Discover — Failed logon from new attacker IP  
-  `s3_discover_failed_logon_new_ip.png`
+- Wazuh Discover — Successful logon (original attacker IP)  
+  ![Changed IP](/Assets/Scenario_3/changed_ip.png)
 
 ---
 
@@ -171,9 +178,9 @@ The Wazuh dashboard provides a consolidated view of the entire incident lifecycl
 
 📸 Screenshots:
 - Wazuh Dashboard — Incident overview (part 1)  
-  `s3_dashboard_overview_part1.png`
+  ![Dashboard 1](/Assets/Scenario_3/dashboard_1.png)
 - Wazuh Dashboard — Incident overview (part 2)  
-  `s3_dashboard_overview_part2.png`
+  ![Dashboard 2](/Assets/Scenario_3/dashboard_2.png)
 
 These views confirm that **SOC response directly altered the attack outcome**.
 
