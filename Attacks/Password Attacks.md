@@ -1,8 +1,11 @@
 # 🔐 Password Attack Toolkit – Cheat Sheet
 
-This document summarizes the most important **password attack methods** and the related **tools**
+This document summarizes the most important **password attack methods** and the related **tools**.
 
-(Hydra, Ncrack, CrackMapExec, Crowbar, Medusa, Crunch, CeWL, John the Ripper), specifically for **lab / pentest / SOC learning** purposes.
+**Included tools:**  
+Hydra, Ncrack, CrackMapExec, Crowbar, Medusa, Crunch, CeWL, John the Ripper
+
+Intended for **lab / pentest / SOC learning** purposes.
 
 > ⚠️ **Warning:** All examples are for use **only in your own lab environment**, against systems you own or are explicitly authorized to test.  
 > Running password attacks against third-party systems is illegal.
@@ -485,30 +488,3 @@ john --incremental=All hashes.txt
 - RDP brute-force detection (lots of 4625 in a short period)  
 - WinRM anomalous login detection  
 - PowerShell suspicious activity (reverse shell, encoded command)
-
----
-
-## 12. Practical Lab Tips
-
-- **Always use snapshots:**  
-  Take VM snapshots before brute-force testing.
-
-- **Know the lockout policy:**  
-  - Use `net accounts` on Windows to see lockout thresholds & duration.  
-
-- **Use slower brute-force for “production-like” simulations:**  
-  - Hydra: add `-W 3` or higher  
-  - Ncrack: `--delay 5s`  
-
-- **Optimize wordlists:**  
-  - Generic: `rockyou.txt`  
-  - Targeted: CeWL + Crunch  
-
-- **Document everything:**  
-  - commands used  
-  - screenshots of logs  
-  - SIEM / Wazuh alert screenshots  
-
-  This becomes **excellent portfolio material** for SOC / blue team roles.
-
----
