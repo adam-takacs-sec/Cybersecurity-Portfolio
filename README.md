@@ -1,3 +1,41 @@
+# 🔐 Adam — Practical Cybersecurity Portfolio
+
+Hands-on cybersecurity projects focused on **real attacker behavior, real logs, and real SOC workflows**.
+
+This repository documents my practical journey toward becoming a **Junior SOC Analyst / Cybersecurity Analyst**, with an emphasis on:
+- detection and response,
+- SIEM investigation,
+- log-based analysis,
+- and realistic adversary simulations.
+
+Everything in this repository is built, tested, and documented in a live lab — not theoretical exercises.
+
+---
+
+## 🎯 Purpose of This Repository
+
+The goal of this portfolio is to demonstrate that I can:
+
+- think like an attacker **and** a defender
+- generate realistic security telemetry
+- investigate incidents using SIEM data
+- understand why controls fail
+- translate incidents into concrete hardening actions
+
+This is meant to be **readable by both technical reviewers and hiring managers**, while still being technically accurate.
+
+---
+
+## 📦 Repository Structure (Overview)
+
+This repository is organized into **four main areas**:
+
+```
+/log-bible
+/attacks
+/projects
+/assets
+```
 
 Each section serves a different purpose.
 
