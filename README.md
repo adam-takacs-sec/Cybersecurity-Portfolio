@@ -191,7 +191,10 @@ If something is hardened, it must directly address an observed weakness.
 
 ## 📬 Contact
 
-If you are a recruiter, SOC analyst, or security professional and would like to discuss this work, feel free to reach out.
-Email: adam.takacs.pr@proton.me
+**Primary contact:**  
+📧 `adam.takacs.pr@proton.me`
+
+Open to discussion with recruiters, SOC analysts, and security professionals.
 
 This repository represents how I think, investigate, and learn security — not just what tools I use.
+
