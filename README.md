@@ -54,7 +54,7 @@ Contents include:
 - Network and authentication concepts
 - SIEM investigation notes and correlations
 
-This is **not copied documentation** — it is a structured knowledge base built from hands-on lab work and real investigation needs.
+This is a structured knowledge base built from hands-on lab work and real investigation needs.
 
 ---
 
@@ -117,19 +117,50 @@ Keeping screenshots centralized ensures:
 
 ## 🧱 Lab Environment (High-Level Overview)
 
-The lab environment is intentionally simple at a high level, while still realistic.
+The lab environment is built to be **realistic, minimal, and practical**, using tools and hardware that are commonly available outside of enterprise environments.
 
-It consists of:
-- a **Mac** used for daily work and ARM-based virtualization,
-- a **PC** used for additional local testing,
-- **Google Cloud Platform VMs** hosting:
+The goal is to demonstrate **security capabilities**, not hardware performance.
+
+### 💻 Available Systems
+
+- **MacBook Pro (M1)**
+  - 8GB RAM
+  - 256GB SSD
+  - Used for:
+    - Daily work
+    - Documentation
+    - Primary interface to Windows endpoints and the SIEM
+
+- **Home PC**
+  - Intel i5 2320 CPU
+  - NVIDIA GTX 1660 Super
+  - 8GB RAM
+  - 500GB HDD
+  - Used for:
+    - Dedicated lab system
+    - Used for attack simulation and testing activities
+
+### ☁️ Cloud Infrastructure
+
+- **Google Cloud Platform VMs**
   - Windows Server endpoints
   - Linux-based SIEM infrastructure (Wazuh)
 
-The focus is **not on the hardware**, but on the security outcomes:
-- real authentication traffic
+Cloud systems provide:
+- internet-exposed services
+- realistic authentication traffic
+- centralized log collection and correlation
+
+### 🎯 Lab Focus
+
+The focus of the lab is **not the underlying hardware**, but the outcomes it enables:
+
+- real authentication events
 - real endpoint telemetry
-- real SIEM ingestion and correlation
+- SIEM ingestion and correlation
+- attacker and SOC workflows across multiple systems
+
+This environment shows that meaningful SOC and detection engineering work can be performed using **limited, realistic resources**.
 
 ---
 
@@ -151,10 +182,10 @@ If something is hardened, it must directly address an observed weakness.
 
 ## 📈 Current Status
 
-- Actively maintained
-- Continuously expanded
-- Portfolio-focused
-- Junior SOC Analyst oriented
+- **Feature-complete** – core scenarios and documentation are finished
+- **Ready for review** – structure, content, and evidence are in place
+- **Actively maintained** – fixes, refinements, and improvements are ongoing
+- **Continuously expanded** – supporting sections (e.g. attacks, log references, detections) will be extended over time
 
 ---
 
