@@ -1,47 +1,54 @@
 # 🔒 Hardened Endpoint — Post-Incident Technical Hardening
 
-This section describes the **concrete technical hardening steps** applied after Scenario 3.  
-No theory, no best practices fluff — only **what was changed, why, and what it prevents**.
+In this phase, I hardened the endpoint **after Scenario 3**, based directly on the attack paths, detection gaps, and operational weaknesses I observed.
 
-The goal of hardening was **not to make the system “unhackable”**, but to:
-- reduce attack surface
-- increase detection depth
-- shorten attacker dwell time
-- prevent repeat compromise using the same techniques
+This is **not a best-practice checklist** and **not theoretical guidance**.  
+Every change listed below was implemented to **close a real gap that was exploited or observed during the scenarios**.
+
+The goal of this hardening phase was:
+- to prevent repeat compromise using the same techniques
+- to reduce attacker dwell time
+- to increase detection depth
+- to make SOC response faster and more reliable
 
 ---
 
 ## 1️⃣ Account & Authentication Hardening
 
-### 🔐 Password Policy (Already Partially Enforced)
-Confirmed and kept in place:
+### 🔐 Password Policy (Validated and Kept)
+
+I confirmed and kept the improved password policy introduced after Scenario 1:
 
 - Minimum password length: **10**
 - Password history: **5**
 - Maximum password age: **90 days**
-- Complexity requirements: **Enabled**
+- Password complexity: **Enabled**
 
-**Security impact:**
-- Prevents reuse of OSINT-derived or previously leaked credentials
-- Increases cost of targeted password guessing
+**Why this matters:**
+- Prevents reuse of OSINT-derived passwords
+- Increases cost of targeted credential guessing
+- Forces periodic credential rotation
+
+This directly addresses the OSINT-based credential compromise seen in Scenario 2.
 
 ---
 
-### 🔒 Account Lockout Policy (Now Enforced)
+### 🔒 Account Lockout Policy (Enforced)
 
-**Final configuration:**
+I enabled and aligned the account lockout policy with realistic enterprise settings:
+
 - Account lockout threshold: **5 failed attempts**
-- Reset account lockout counter after: **30 minutes**
-- Account lockout duration: **30 minutes**
+- Lockout duration: **30 minutes**
+- Reset counter after: **30 minutes**
 
 **Security impact:**
-- Prevents extended brute-force and password spraying
-- Forces attacker to either:
-  - rotate accounts
+- Prevents extended password spraying and brute-force attacks
+- Forces attackers to either:
   - slow down significantly
+  - rotate infrastructure
   - abandon the attack
 
-This directly addresses the weakness exploited in Scenario 2.
+This directly blocks the attack pattern used in Scenario 2.
 
 ---
 
@@ -49,62 +56,67 @@ This directly addresses the weakness exploited in Scenario 2.
 
 ### 🚫 RDP Exposure Reduction
 
-**Changes applied:**
-- IP-based access restrictions enforced
-- Attacker source IPs blocked at endpoint level
-- No longer fully open to the internet
+I reduced unnecessary exposure of the RDP service:
+
+- Applied IP-based restrictions to RDP
+- Blocked attacker source IPs at the endpoint level
+- Eliminated unrestricted public RDP access
 
 **Security impact:**
-- Eliminates opportunistic scanning and brute-force attempts
-- Forces attacker to control infrastructure within allowed ranges
+- Stops opportunistic scanning and automated attacks
+- Forces attackers to operate from constrained infrastructure
+- Makes brute-force and spray attacks significantly harder
 
 ---
 
-### 🔑 Credential Hygiene
+### 🔑 Credential Hygiene & Session Control
 
-**Action taken:**
-- Compromised user password reset immediately
-- Active sessions forcibly terminated
+After detecting compromise in Scenario 3, I performed:
+
+- Immediate password reset for the compromised account
+- Forced termination of all active RDP sessions
 
 **Security impact:**
-- Invalidates stolen credentials instantly
-- Prevents session hijacking or reuse
+- Instantly invalidates stolen credentials
+- Prevents session reuse or hijacking
+- Limits attacker dwell time to minutes instead of hours
 
 ---
 
-## 3️⃣ Logging & Telemetry Improvements
+## 3️⃣ Logging & Telemetry Hardening
 
 ### 📊 Windows Security Logging
 
-**Confirmed enabled:**
-- Successful logons (4624)
-- Failed logons (4625)
-- NTLM authentication events
-- RDP authentication visibility
+I validated that the following security events were fully enabled and collected:
+
+- Successful logons (**4624**)
+- Failed logons (**4625**)
+- NTLM authentication activity
+- RDP logon events
 
 **Security impact:**
-- Authentication misuse is now visible in real time
-- Enables correlation and severity escalation in SIEM
+- Authentication misuse is visible in real time
+- Enables meaningful correlation in the SIEM
+- Allows distinction between noise and attack behavior
 
 ---
 
 ### 🧠 PowerShell Visibility Upgrade
 
-**Change applied:**
-- PowerShell **Script Block Logging enabled**
-- PowerShell Operational log collected by Wazuh
+To eliminate the PowerShell blind spot observed in Scenario 3, I enabled:
 
-**Resulting telemetry:**
+- **PowerShell Script Block Logging**
+- Collection of PowerShell Operational logs by Wazuh
+
+This introduced:
 - Event ID **4104**
 - Full PowerShell command content
 - Script execution context
 
 **Security impact:**
-- Eliminates “PowerShell blind spot”
-- Allows SOC to:
-  - reconstruct attacker intent
-  - distinguish benign admin activity from malicious recon
-  - detect living-off-the-land techniques
+- Enables reconstruction of attacker intent
+- Allows detection of living-off-the-land techniques
+- Distinguishes benign admin activity from malicious reconnaissance
 
 ---
 
@@ -112,63 +124,74 @@ This directly addresses the weakness exploited in Scenario 2.
 
 ### ⚙ Sysmon Configuration Review
 
-**Maintained telemetry:**
+I reviewed and tuned the Sysmon configuration to balance visibility and noise.
+
+**Telemetry maintained:**
 - Process creation
-- File creation
 - Network connections
+- File creation
 - Registry modifications
 
-**Adjustment made:**
-- Noise reduction for non-security-relevant paths
-- Focus on user-writable directories and PowerShell execution
+**Adjustments made:**
+- Reduced noise from known benign system paths
+- Focused monitoring on:
+  - user-writable directories
+  - PowerShell execution
+  - suspicious parent-child process relationships
 
 **Security impact:**
 - Higher signal-to-noise ratio
-- Faster analyst triage
+- Faster SOC triage
 - Reduced alert fatigue
 
 ---
 
 ## 5️⃣ SIEM & Detection Logic Improvements
 
-### 🚨 Alert Threshold Tuning
+### 🚨 Alert Threshold Alignment
 
-**Changes:**
-- Authentication alerts aligned with lockout policy
+I aligned detection logic with the enforced security policies:
+
+- Authentication alert thresholds matched lockout policy
 - Correlation rules detect:
   - failed → successful logon patterns
-  - IP change attempts
-  - post-containment retry behavior
+  - authentication attempts after IP blocking
+  - attacker retry behavior after containment
 
 **Security impact:**
 - Prevents false positives
 - Escalates alerts only when behavior is meaningful
-- Reflects real attacker tradecraft
+- Reflects real attacker tradecraft instead of raw event volume
 
 ---
 
 ### 📈 Severity Normalization
 
-**Outcome:**
-- Low-risk noise downgraded
-- High-confidence events elevated
-- Dashboard reflects **actual risk**, not raw volume
+I normalized alert severity across the SIEM:
+
+- Low-risk authentication noise downgraded
+- High-confidence attack patterns elevated
+- Dashboards now reflect **actual risk**, not event count
+
+This ensures that SOC attention is directed where it matters.
 
 ---
 
-## 6️⃣ Operational SOC Improvements
+## 6️⃣ SOC Operational Hardening
 
-### 🧑‍💻 Response Workflow Defined
+### 🧑‍💻 Response Workflow Definition
 
-**SOC actions now standardized:**
-1. Session termination
-2. Credential reset
-3. IP containment
-4. Post-containment monitoring
+Based on Scenario 3, I formalized a clear SOC response workflow:
+
+1. Identify suspicious authentication
+2. Terminate active sessions
+3. Reset affected credentials
+4. Apply IP-based containment
+5. Monitor for post-containment retries
 
 **Security impact:**
-- Faster response time
-- Fewer decision points during live incidents
+- Faster response during live incidents
+- Reduced decision-making overhead
 - Consistent handling of repeated attacks
 
 ---
@@ -188,12 +211,13 @@ This directly addresses the weakness exploited in Scenario 2.
 
 ## 🟢 Hardened Endpoint State
 
-After hardening:
+After completing the hardening phase:
+
 - Reuse of compromised credentials **fails**
 - IP-based evasion **fails**
-- Recon activity is **visible**
+- Reconnaissance activity is **visible**
 - Attacker dwell time is **minimal**
-- Repeat compromise using the same path is **not viable**
+- Repeat compromise using the same attack path is **not viable**
 
 This hardened state represents a **realistic, production-ready endpoint security posture**, not an artificial lab configuration.
 
