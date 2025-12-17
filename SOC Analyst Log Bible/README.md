@@ -2,7 +2,7 @@
 ### *The Ultimate Log Reference for Blue Team, DFIR, SOC, Threat Hunting & Detection Engineering*
 
 A SOC analyst's work is 90% log interpretation, correlation, and analysis.  
-This project is one of the **most complete and practical log references in the world**, covering:
+This project is one of the **most complete and practical log references**, covering:
 
 - Windows Event Logs (Security, System)  
 - Sysmon (all important Event IDs with examples)  
@@ -116,14 +116,3 @@ Every log source includes:
 - **How it appears in SIEM queries**
 
 This is designed to be the **most practical and easy-to-use log reference** available.
-
----
-
-# 🚀 **Next Steps**
-
-Open the individual sections in the `/sections` directory.  
-If you want to add new log sources, feel free to submit a PR.
-
-Are you ready to understand logs the way a real SOC analyst does?
-
-**Let’s hunt. 🔍**
