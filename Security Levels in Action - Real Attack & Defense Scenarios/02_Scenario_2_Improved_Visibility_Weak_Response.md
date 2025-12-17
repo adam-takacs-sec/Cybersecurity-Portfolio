@@ -106,31 +106,25 @@ Artifacts used:
 - usernames_osint.txt
 - passwords_osint.txt
 
-[SCREENSHOT PLACEHOLDER]
 Kali Linux — OSINT-based username and password lists
 ![Credidential List](/Assets/Scenario_2/credidential_list.png)
 
 ---
 
-## 🔴 7. Authentication Attack Observed in SIEM
+## 🔴 7. Credential Guessing via RDP (Hydra)
 
-The attacker initiated repeated RDP authentication attempts against the exposed endpoint.
+The attacker launched a targeted RDP password guessing attack using Hydra.
 
-SIEM evidence confirms:
-- Event ID 4625 (failed logon)
-- NTLM authentication failures
-- Status code 0xC000006A (wrong password)
-- Repeated attempts against valid usernames
-- High-volume authentication noise from a single source IP
+The attack leveraged:
+- Validated username candidates
+- A focused OSINT-derived password list
+- Low parallelism to avoid connection instability
 
-This confirms:
-- Valid usernames were discovered
-- Password guessing was actively occurring
-- No defensive controls interrupted the attack
+This resulted in the discovery of valid credentials.
 
-[SCREENSHOT PLACEHOLDER]
-Wazuh Discover — Failed authentication attempts
-![4625](/Assets/Scenario_2/4625.png)
+Kali Linux — Hydra RDP attack and credential discovery
+![Hydra](/Assets/Scenario_2/hydra_xfreerdp3login.png)
+File: hydra_xfreerdp3login.png
 
 ---
 
@@ -139,16 +133,12 @@ Wazuh Discover — Failed authentication attempts
 After multiple failed attempts, the attacker successfully authenticated using OSINT-derived credentials.
 
 Observed behavior:
-- Successful RDP logon (Event ID 4624)
+- Successful RDP logon
 - Multiple successful logon events due to RDP reconnect behavior
 - Same source IP as the failed attempts
 
 No alert was generated.
 No SOC investigation followed.
-
-[SCREENSHOT PLACEHOLDER]
-Wazuh Discover — Successful NTLM logon
-![4624](/Assets/Scenario_2/4624.png)
 
 ---
 
@@ -161,13 +151,12 @@ Observed commands included:
 - hostname
 - systeminfo
 - ipconfig /all
-- local environment inspection
 
 These actions are typical of early-stage attacker reconnaissance.
 
-[SCREENSHOT PLACEHOLDER]
 Windows PowerShell — Initial reconnaissance commands
-![xfreerdp3](/Assets/Scenario_2/xfreerdp3_powershell.png)
+![Reconnaissance](/Assets/Scenario_2/xfreerdp3_powershell.png)
+File: xfreerdp3_powershell.png
 
 ---
 
@@ -176,12 +165,15 @@ Windows PowerShell — Initial reconnaissance commands
 The attacker attempted several actions requiring elevated privileges, including:
 - Registry access to SAM and SYSTEM hives
 - Local account enumeration
-- Network and domain queries
+- Network inspection requiring higher privileges
 
 All privileged actions failed due to insufficient permissions.
-The attacker confirmed they only had standard user access.
 
-Evidence of failed privileged registry access is visible at the top of the reconnaissance screenshot referenced in Section 9.
+Evidence of failed privileged registry access and network inspection commands is visible in the following screenshot.
+
+Windows PowerShell — Failed registry access and ipconfig output
+![REG](/Assets/Scenario_2/reg_ipconfig.png)
+File: reg_ipconfig.png
 
 No SOC investigation occurred.
 
@@ -217,7 +209,33 @@ Missing:
 
 ---
 
-## 🟧 13. Scenario 2 Outcome
+## 👁️ 13. SIEM Evidence (Post-Incident Review)
+
+After the incident, a retrospective SIEM review confirmed the attack path.
+
+### Failed Authentication Events
+
+- Event ID 4625
+- NTLM authentication failures
+- Repeated attempts from the same source IP
+
+Wazuh Discover — Failed authentication attempts
+![4625](/Assets/Scenario_2/4625.png)
+File: 4625.png
+
+### Successful Authentication Events
+
+- Event ID 4624
+- Successful NTLM logon
+- Same source IP as failed attempts
+
+Wazuh Discover — Successful authentication
+![4624](/Assets/Scenario_2/4624.png)
+File: 4624.png
+
+---
+
+## 🟧 14. Scenario 2 Outcome
 
 This scenario demonstrates that:
 - Visibility alone does not equal security
@@ -229,7 +247,7 @@ The compromised account remains active and unchanged.
 
 ---
 
-## 🔐 14. Post-Incident Hardening (Implemented After Scenario 2)
+## 🔐 15. Post-Incident Hardening (Implemented After Scenario 2)
 
 Following this incident, the organization implemented delayed security improvements:
 
