@@ -1,76 +1,128 @@
-# 🔐 Adam – Practical Cybersecurity Portfolio
 
-Hands-on cybersecurity projects, SOC analysis work, log investigation, and attack simulations — built across a hybrid lab environment combining local ARM virtualization and cloud infrastructure.
-
-This repository documents my practical journey toward becoming a Junior SOC Analyst / Cybersecurity Analyst, focusing on real-world skills, SIEM work, and detection engineering.
+Each section serves a different purpose.
 
 ---
 
-## 📦 Repository Structure (Overview)
+## 📘 1. SOC Analyst Log Bible  
+➡️ `/log-bible/`
 
-This portfolio currently contains three main areas:
+A comprehensive, from-scratch reference created during my learning process.
 
-### **1. SOC Analyst Log Bible**
-➡️ `/log-bible/`  
-A comprehensive, from-scratch reference covering Windows logs, Sysmon, Linux logs, network telemetry, cloud audit logs, and EDR behavior.  
-Designed as a practical guide for SOC analysts and blue teamers.
+Contents include:
+- Windows Security Event IDs (authentication, account management, process creation)
+- Sysmon telemetry and use cases
+- PowerShell logging (limitations and improvements)
+- Linux authentication and system logs
+- Network and authentication concepts
+- SIEM investigation notes and correlations
 
----
-
-### **2. Attack Documentation**
-➡️ `/attacks/`  
-Focused, practical explanations of real attack techniques.  
-Includes:
-- Password Attacks (Brute Force, Spraying, Credential Abuse)
-
-More attack topics will be added later as the portfolio evolves.
+This is **not copied documentation** — it is a structured knowledge base built from hands-on lab work and real investigation needs.
 
 ---
 
-### **3. Practical Cybersecurity Projects**
-➡️ `/projects/`  
-This section will contain scenario-based projects demonstrating full attack & detection workflows (3–4 self-contained cases).  
-Currently under construction — content will be added gradually.
+## ⚔️ 2. Attack Documentation  
+➡️ `/attacks/`
+
+Focused documentation of **specific attack techniques**, written from an attacker’s perspective but analyzed from a SOC viewpoint.
+
+Current topics include:
+- Password brute force
+- Password spraying
+- Credential abuse
+- OSINT-based credential attacks
+
+Each attack description explains:
+- why it works,
+- what logs it generates,
+- and how it should be detected.
+
+This section will expand over time.
 
 ---
 
-## 🧱 Lab Environment (High-Level)
+## 🧪 3. Practical Cybersecurity Projects  
+➡️ `/projects/`
 
-My cybersecurity lab is built as a **hybrid environment**:
+Scenario-based, end-to-end projects demonstrating full **attack → detection → response → hardening** workflows.
 
-### **Local (ARM Mac – UTM)**
-- **Kali Linux (ARM)**  
-  Used for attack simulation, scanning, enumeration, exploitation, and traffic generation.
+The main project currently documented here is:
 
-### **Cloud (Google Cloud Platform – VM instances)**
-- **Ubuntu Server (Wazuh SIEM + Docker services)**  
-  Central log collection, analysis, detection engineering.
-  
-- **Windows Server (victim machine / AD / Sysmon)**  
-  Produces real authentication, service, PowerShell, Sysmon, and attack telemetry.
+### **Security Levels in Action**
+A multi-stage lab that includes:
+- OSINT Pre-Stage
+- Scenario 1 — Weak Endpoint
+- Scenario 2 — Improved Visibility, Weak Response
+- Scenario 3 — Detection & Response in Action
+- Hardened Endpoint (Post-Incident)
 
-This hybrid setup closely resembles a real enterprise SOC environment and enables:
+Each scenario builds logically on the previous one and reflects realistic SOC operations rather than artificial challenges.
 
-- remote log ingestion  
-- multi-host attack paths  
-- real identity attacks  
-- realistic detection pipelines  
+---
+
+## 🖼️ 4. Assets  
+➡️ `/assets/`
+
+This directory contains **all screenshots and visual evidence** used across the repository, including:
+- attacker-side execution
+- Windows endpoint activity
+- Wazuh SIEM dashboards
+- Discover queries
+- authentication events
+- process execution evidence
+
+Keeping screenshots centralized ensures:
+- clean documentation
+- easy reuse
+- consistent references across scenarios
+
+---
+
+## 🧱 Lab Environment (High-Level Overview)
+
+The lab environment is intentionally simple at a high level, while still realistic.
+
+It consists of:
+- a **Mac** used for daily work and ARM-based virtualization,
+- a **PC** used for additional local testing,
+- **Google Cloud Platform VMs** hosting:
+  - Windows Server endpoints
+  - Linux-based SIEM infrastructure (Wazuh)
+
+The focus is **not on the hardware**, but on the security outcomes:
+- real authentication traffic
+- real endpoint telemetry
+- real SIEM ingestion and correlation
 
 ---
 
 ## 🧭 Philosophy
 
-I focus on **practical, reproducible, hands-on work**:
+My approach is strictly **hands-on and evidence-driven**.
 
-- real logs  
-- real detections  
-- real attack traffic  
-- real SIEM pipelines  
+I focus on:
+- real logs instead of assumptions
+- detection logic instead of dashboards only
+- attacker behavior instead of checklists
+- response actions instead of passive visibility
 
-No theory without demonstration.
+If something is detected, it must be explainable.
+If something fails, the reason must be clear.
+If something is hardened, it must directly address an observed weakness.
+
+---
+
+## 📈 Current Status
+
+- Actively maintained
+- Continuously expanded
+- Portfolio-focused
+- Junior SOC Analyst oriented
 
 ---
 
 ## 📬 Contact
 
-If you're a recruiter or cybersecurity professional interested in my work or experience, feel free to reach out.
+If you are a recruiter, SOC analyst, or security professional and would like to discuss this work, feel free to reach out.
+Email: adam.takacs.pr@proton.me
+
+This repository represents how I think, investigate, and learn security — not just what tools I use.
