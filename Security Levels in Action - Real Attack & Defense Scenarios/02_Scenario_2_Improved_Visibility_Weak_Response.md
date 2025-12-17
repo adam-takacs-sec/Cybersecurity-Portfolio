@@ -1,5 +1,5 @@
-# 🟧 Scenario 2 — Good SIEM, Weak SOC Response  
-**Attacker gains access again — visibility improves, but no action is taken**
+# 🟧 Scenario 2 — Improved Visibility, Weak Response
+Attacker gains access again — visibility improves, but no action is taken
 
 ---
 
@@ -7,57 +7,59 @@
 
 This scenario continues directly after Scenario 1.
 
-Following the initial compromise, the organization implemented **partial security improvements**:
-- Logging and telemetry were significantly enhanced
-- A SIEM is now actively ingesting Windows security events
-- Sysmon was deployed
-- Basic hardening steps were taken
+Following the initial compromise, the organization implemented partial security improvements:
+- Centralized logging was introduced
+- A SIEM platform (Wazuh) was deployed
+- Windows Security Event logs are actively ingested
+- Sysmon was installed for enhanced telemetry
+- Basic password policy improvements were applied
 
-However, **no SOC processes, alerting logic, or response workflows were introduced**.
+However, no SOC processes, alerting logic, or response workflows were introduced.
 
-Scenario 2 demonstrates a common real-world failure:
-> **The attacker is clearly visible — but ignored.**
-
----
-
-## 🟦 1. Environment Overview — After Scenario 1 Improvements
-
-The Windows Server endpoint remains publicly accessible and operational as a workstation-style endpoint.
-
-### 🔐 Password & Account Security (Partially Improved)
-
-- Password complexity: **Enabled**
-- Minimum password length: **10**
-- Password history: **5**
-- Maximum password age: **90 days**
-- Account lockout policy: **Disabled**
-- MFA: **Not implemented**
-
-A real employee user changed their password to a **personal, OSINT-derived password**, making it stronger than default credentials — but still guessable using targeted reconnaissance.
+This scenario demonstrates a common real-world security failure:
+The attacker is clearly visible — but ignored.
 
 ---
 
-## 📊 Logging & Visibility — Improved but Incomplete
+## 🟦 1. Environment Overview — Post Scenario 1 State
 
-### ✔ Advanced Audit Policy Configuration
+The Windows Server endpoint remains publicly accessible and operates as a workstation-style endpoint.
+
+### Password & Account Security (Partially Improved)
+
+- Password complexity enabled
+- Minimum password length: 10
+- Password history: 5
+- Maximum password age: 90 days
+- Account lockout policy: Disabled
+- MFA: Not implemented
+
+After the first incident, a real employee user changed their password.
+While stronger than default credentials, the password was still guessable using OSINT-derived personal and contextual information.
+
+---
+
+## 📊 2. Logging & Visibility — Improved but Incomplete
+
+### Advanced Audit Policy Configuration
 
 The following audit categories were enabled:
 
-- **Logon / Logoff**
+- Logon / Logoff
   - Successful logons
   - Failed logons
-- **Account Logon**
+- Account Logon
   - Credential validation
-- **Account Management**
+- Account Management
   - User and group changes
-- **Detailed Tracking**
+- Detailed Tracking
   - Process creation
 
-These changes significantly increased authentication and activity visibility.
+These changes significantly increased authentication visibility.
 
 ---
 
-## 👁️ Sysmon Deployment
+## 👁️ 3. Sysmon Deployment
 
 Sysmon was installed using a community-recommended baseline configuration.
 
@@ -71,162 +73,153 @@ Sysmon events are forwarded to the SIEM via the Wazuh agent.
 
 ---
 
-## 📡 Wazuh Agent & SIEM State
+## 📡 4. SIEM State (Wazuh)
 
-- Windows Security Event logs are forwarded
+- Windows Security Event logs are collected
 - NTLM authentication failures are visible
 - RDP logons are visible
 - Limited process execution telemetry is available
 
-⚠️ No alert rules, thresholds, or SOC playbooks are configured.
+No alert rules, thresholds, or SOC playbooks are configured.
 
 ---
 
-## 🧱 Network Exposure (Unchanged)
+## 🧱 5. Network Exposure (Unchanged)
 
-- RDP (3389) is publicly exposed
+- RDP (3389) publicly exposed
 - No IP allowlisting
 - No rate limiting
 - No brute-force detection rules
-- No account lockout
+- No account lockout enforcement
 
 ---
 
-# 🟧 2. Initial Access — OSINT-Based Credential Attack
+## 🟧 6. Initial Access — OSINT-Based Credential Attack
 
 ### Attacker Preparation
 
-Using data gathered during the OSINT Pre-Stage, the attacker prepared:
-
+Using information gathered during the OSINT pre-stage, the attacker prepared:
 - A custom username list based on corporate naming conventions
-- A targeted password list derived from personal information
+- A targeted password list derived from personal and contextual information
 
-Files used:
-- `usernames.txt`
-- `osint_passwords.txt`
+Artifacts used:
+- usernames_osint.txt
+- passwords_osint.txt
+
+[SCREENSHOT PLACEHOLDER]
+Kali Linux — OSINT-based username and password lists
+![Credidential List](/Assets/Scenario_2/credidential_list.png)
 
 ---
 
-## 🔴 Authentication Attack Observed in SIEM
+## 🔴 7. Authentication Attack Observed in SIEM
 
-The attacker initiated repeated authentication attempts over RDP.
+The attacker initiated repeated RDP authentication attempts against the exposed endpoint.
 
-### SIEM Evidence
-
-- **Event ID 4776** — NTLM credential validation failures
-- Status code: **0xC000006A** (Wrong password)
-- Multiple target usernames tested
-- High-volume authentication noise observed
+SIEM evidence confirms:
+- Event ID 4625 (failed logon)
+- NTLM authentication failures
+- Status code 0xC000006A (wrong password)
+- Repeated attempts against valid usernames
+- High-volume authentication noise from a single source IP
 
 This confirms:
 - Valid usernames were discovered
 - Password guessing was actively occurring
 - No defensive controls interrupted the attack
 
+[SCREENSHOT PLACEHOLDER]
+Wazuh Discover — Failed authentication attempts
+![4625](/Assets/Scenario_2/4625.png)
+
 ---
 
-## 🟢 Successful Authentication
+## 🟢 8. Successful Authentication
 
-After repeated failures, the attacker successfully authenticated using OSINT-derived credentials.
+After multiple failed attempts, the attacker successfully authenticated using OSINT-derived credentials.
 
-### Evidence
-
-- Successful RDP logon observed
+Observed behavior:
+- Successful RDP logon (Event ID 4624)
 - Multiple successful logon events due to RDP reconnect behavior
-- Same source IP as failed attempts
+- Same source IP as the failed attempts
 
-⚠️ No alert was generated.  
-⚠️ No SOC investigation followed.
+No alert was generated.
+No SOC investigation followed.
+
+[SCREENSHOT PLACEHOLDER]
+Wazuh Discover — Successful NTLM logon
+![4624](/Assets/Scenario_2/4624.png)
 
 ---
 
-# 🟦 3. Post-Compromise Activity — User-Level Access
+## 🟦 9. Post-Compromise Activity — User-Level Reconnaissance
 
-After obtaining access, the attacker performed standard reconnaissance actions.
+After gaining access, the attacker performed standard user-level reconnaissance.
 
-### Commands Executed
-
-- Identity and system checks:
-  - `whoami`
-  - `hostname`
-  - `systeminfo`
-
-- Environment enumeration:
-  - Directory listing of user profiles
-  - Running processes and services
-  - Network configuration (`ipconfig /all`)
+Observed commands included:
+- whoami
+- hostname
+- systeminfo
+- ipconfig /all
+- local environment inspection
 
 These actions are typical of early-stage attacker reconnaissance.
 
----
-
-## 📉 Visibility Gap Identified
-
-While authentication activity was clearly visible, **detailed post-compromise command execution telemetry was limited**.
-
-As a result:
-- The SIEM confirms access occurred
-- The SIEM cannot fully reconstruct attacker intent
-- No alerting logic escalated the activity
-
-This represents a **critical detection maturity gap**.
+[SCREENSHOT PLACEHOLDER]
+Windows PowerShell — Initial reconnaissance commands
+![Nmap scan](/Assets/Scenario_1/xfreerd3_powershell.png)
 
 ---
 
-# 🟥 4. Privileged Action Attempts — Blocked but Ignored
+## 🟥 10. Privileged Action Attempts — Blocked but Ignored
 
-The attacker attempted several actions requiring administrative privileges:
-
+The attacker attempted several actions requiring elevated privileges, including:
 - Registry access to SAM and SYSTEM hives
-- Local account manipulation
-- Scheduled task creation
-- Event log clearing
+- Local account enumeration
+- Network and domain queries
 
-### Result
+All privileged actions failed due to insufficient permissions.
+The attacker confirmed they only had standard user access.
 
-- All privileged actions failed due to insufficient permissions
-- Access was denied at the operating system level
-- The attacker confirmed they only had standard user access
+Evidence of failed privileged registry access is visible at the top of the reconnaissance screenshot referenced in Section 9.
 
-⚠️ These failed attempts were **not investigated by the SOC**.
+No SOC investigation occurred.
 
 ---
 
-# 🧠 5. Attacker Decision Point
+## 🧠 11. Attacker Decision Point
 
 At this stage, the attacker assessed that:
-
 - Privilege escalation was not immediately possible
 - Continued activity would increase detection risk
 - The compromised credentials remained valid
 
-### Attacker Action
-
-The attacker **ceased active operations** and disconnected, preserving access for potential future use.
+The attacker ceased active operations and disconnected, preserving access for potential future use.
 
 This behavior reflects realistic attacker tradecraft.
 
 ---
 
-# 🟦 6. SIEM Summary — What Was Seen
+## 📉 12. SIEM Summary — What Was Seen
 
-✔ OSINT-based credential guessing  
-✔ High-volume NTLM authentication failures  
-✔ Successful RDP logon  
-✔ User-level reconnaissance activity  
-✔ Failed privileged action attempts  
+Observed:
+- OSINT-based credential guessing
+- High-volume NTLM authentication failures
+- Successful RDP authentication
+- User-level reconnaissance activity
+- Failed privileged action attempts
 
-❌ No alert generation  
-❌ No SOC response  
-❌ No account reset  
-❌ No containment  
+Missing:
+- Alert generation
+- SOC triage or investigation
+- Credential reset
+- Containment or remediation
 
 ---
 
-# 🟧 7. Scenario 2 Outcome
+## 🟧 13. Scenario 2 Outcome
 
 This scenario demonstrates that:
-
 - Visibility alone does not equal security
 - Logs without response are ineffective
 - Attackers can remain undetected even when activity is recorded
@@ -236,20 +229,36 @@ The compromised account remains active and unchanged.
 
 ---
 
-# 🔜 Lead-In to Scenario 3
+## 🔐 14. Post-Incident Hardening (Implemented After Scenario 2)
 
-Because the incident was not properly handled:
+Following this incident, the organization implemented delayed security improvements:
 
-- The attacker retains valid credentials
-- No lessons were operationalized
-- Security posture remains reactive
+- Account lockout policy enabled (5 attempts / 30 minutes)
+- Custom Wazuh alert rules created for:
+  - Multiple failed logons
+  - Successful logon after failed attempts
+  - NTLM authentication usage
+- Correlation rules introduced to link failed and successful authentication events
+- Improved visibility into process creation (Event ID 4688)
+- SOC dashboards created to highlight high-risk authentication behavior
 
-This directly enables **Scenario 3**, where the attacker returns and the SOC is finally forced to respond.
+These changes directly enable Scenario 3, where the SOC finally responds in real time.
 
 ---
 
-# ✔ End of Scenario 2
+## 🔜 Lead-In to Scenario 3
 
-**Snapshots:**
-- Windows → `scenario2_end_windows`
-- Kali → `scenario2_end_kali`
+Because the attacker was not contained:
+- Valid credentials remain usable
+- No proactive defense exists
+- The SOC is forced into a reactive posture
+
+This leads directly into Scenario 3: Active Response and Containment.
+
+---
+
+## ✔ End of Scenario 2
+
+Snapshots:
+- Windows → scenario2_end_windows
+- Kali → scenario2_end_kali
