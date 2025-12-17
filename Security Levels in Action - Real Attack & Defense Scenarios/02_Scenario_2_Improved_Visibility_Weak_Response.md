@@ -167,7 +167,7 @@ These actions are typical of early-stage attacker reconnaissance.
 
 [SCREENSHOT PLACEHOLDER]
 Windows PowerShell — Initial reconnaissance commands
-![Nmap scan](/Assets/Scenario_1/xfreerd3_powershell.png)
+![xfreerdp3](/Assets/Scenario_2/xfreerd3_powershell.png)
 
 ---
 
