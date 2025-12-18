@@ -236,11 +236,3 @@ Following this incident, I proceeded with:
 - Mature SOC workflows
 
 This marks the transition from **reactive detection** to **proactive defense**.
-
----
-
-# ✔ End of Scenario 3
-
-Snapshots:
-- Windows → `scenario3_end_windows`
-- Kali → `scenario3_end_kali`
