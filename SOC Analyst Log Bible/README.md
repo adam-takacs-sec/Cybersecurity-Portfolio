@@ -1,27 +1,11 @@
 # 📘 SOC Analyst Log Bible  
-### *The Ultimate Log Reference for Blue Team, DFIR, SOC, Threat Hunting & Detection Engineering*
+### *A Practical Log Reference for SOC, Blue Team, DFIR & Detection Engineering*
 
-A SOC analyst's work is 90% log interpretation, correlation, and analysis.  
-This project is one of the **most complete and practical log references**, covering:
+SOC analyst work relies heavily on understanding logs, correlating events, and interpreting activity across multiple systems.
 
-- Windows Event Logs (Security, System)  
-- Sysmon (all important Event IDs with examples)  
-- PowerShell Operational & ScriptBlock logs  
-- Windows Defender & Task Scheduler  
-- Linux logs (auth.log, syslog, auditd, systemd)  
-- Firewall logs (Palo Alto, Fortinet, Cisco ASA)  
-- VPN logs (AnyConnect, GlobalProtect)  
-- DNS logging (server + endpoint)  
-- Proxy & Web Gateway logs  
-- DHCP logs (lateral movement detection)  
-- IIS, Apache, NGINX logs  
-- Cloud provider audit logs (Azure, AWS, GCP)  
-- EDR telemetry (vendor-agnostic behavioral breakdown)  
-- MITRE ATT&CK mapping for every event type  
-- "Alert Relevance" scoring for SOC analysts  
+This project is a hands-on log reference built around real SOC investigation workflows, not theoretical descriptions.
 
-This project brings **every important log source into one place**, explained clearly with examples and practical guidance.  
-The goal: *never again have a moment of “I don’t know what this event means”* as a SOC analyst.
+It brings together key log sources and explains what they actually tell you during an investigation — helping turn raw events into actionable understanding.
 
 ---
 
