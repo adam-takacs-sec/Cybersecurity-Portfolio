@@ -178,8 +178,6 @@ Evidence of failed privileged registry access and network inspection commands is
 Windows PowerShell — Failed registry access and ipconfig output  
 ![REG](/Assets/Scenario_2/reg_ipconfig.png)
 
-No SOC investigation occurred.
-
 ---
 
 ## 🧠 11. Attacker Decision Point
