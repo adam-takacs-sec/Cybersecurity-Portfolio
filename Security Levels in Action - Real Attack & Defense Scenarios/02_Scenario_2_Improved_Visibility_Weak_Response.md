@@ -271,11 +271,3 @@ Because I did not contain the attacker during Scenario 2:
 - I was forced into a reactive posture
 
 This leads directly into **Scenario 3 — Active Response and Containment**.
-
----
-
-## ✔ End of Scenario 2
-
-Snapshots:
-- Windows → `scenario2_end_windows`
-- Kali → `scenario2_end_kali`
