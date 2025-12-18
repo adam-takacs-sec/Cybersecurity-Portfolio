@@ -9,7 +9,6 @@ This scenario continues directly after Scenario 1.
 
 Following the initial compromise, I implemented **partial security improvements** on the environment:
 - Centralized logging was introduced
-- A SIEM platform (Wazuh) was deployed
 - Windows Security Event logs were actively ingested
 - Sysmon was installed for enhanced telemetry
 - Basic password policy improvements were applied
